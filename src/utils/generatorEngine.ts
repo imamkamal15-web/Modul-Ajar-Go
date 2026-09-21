@@ -8,6 +8,7 @@ export interface GenerateFormValues {
   mataPelajaran: string;
   materiPelajaran: string;
   alokasiWaktu: string;
+  jumlahPertemuan?: number | string;
   modelPembelajaran: string;
   tahunAjaran: string;
   namaSekolah: string;
@@ -28,6 +29,214 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
   const semester = form.semester || "Semester 1";
   const alokasi = form.alokasiWaktu || "2 x 35 Menit";
 
+  // Determine number of meetings
+  let countPertemuan = 1;
+  if (form.jumlahPertemuan) {
+    countPertemuan = Math.max(1, parseInt(String(form.jumlahPertemuan), 10) || 1);
+  } else {
+    const match = alokasi.match(/(\d+)\s*pertemuan/i);
+    if (match) {
+      countPertemuan = Math.max(1, parseInt(match[1], 10));
+    }
+  }
+
+  // Generate multi-meeting list if > 1
+  let daftarPertemuan: any[] | undefined = undefined;
+
+  if (countPertemuan === 2) {
+    daftarPertemuan = [
+      {
+        pertemuanKe: 1,
+        judulFokus: "Pertemuan 1: Memahami Konsep Dasar, Stimulasi Masalah & Investigasi Awal",
+        alokasiWaktu: "2 x 35 Menit",
+        waktuPendahuluan: "10 Menit",
+        deskripsiPendahuluan: [
+          "Orientasi, Salam Hangat, dan Doa bersama yang dipimpin oleh ketua kelas (Keimanan dan Ketaqwaan).",
+          "Cek kehadiran, kenyamanan ruang kelas, dan 'Latihan Berkesadaran (Mindful Breathing 2 Menit)' untuk menyiapkan fokus murid.",
+          `Apersepsi mengaitkan pengalaman nyata murid dengan topik ${materi} serta mengajukan pertanyaan pemantik awal.`,
+          "Penyampaian Tujuan Pembelajaran Pertemuan 1, kesepakatan belajar bersama, dan pembagian target capaian.",
+        ],
+        waktuInti: "50 Menit",
+        sintakInti: [
+          {
+            sintakNomor: 1,
+            namaSintak: "Orientasi Murid pada Masalah Kontekstual / Stimulasi Awal",
+            tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+            dimensiProfil: "Penalaran Kritis & Keimanan",
+            deskripsi: `Guru menayangkan video pemantik/studi kasus nyata terkait fenomena ${materi}.\nMurid mencatat hal-hal penting dan mengajukan pertanyaan kritis awal.\nGuru merumuskan tantangan utama yang akan dipecahkan murid dalam 2 pertemuan.`,
+          },
+          {
+            sintakNomor: 2,
+            namaSintak: "Mengorganisasikan Murid untuk Belajar Berdiferensiasi",
+            tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kolaboratif & Berkesadaran)",
+            dimensiProfil: "Kolaborasi & Kemandirian",
+            deskripsi: `Guru membentuk kelompok heterogen (4-5 murid) dan membagikan LKPD Tematik Bagian 1.\nSetiap anggota kelompok menyepakati peran tugas (Kapten, Pengamat, Notulis, dan Juru Bicara).\nGuru memastikan setiap murid memahami tujuan investigasi kelompok.`,
+          },
+          {
+            sintakNomor: 3,
+            namaSintak: "Penyelidikan Awal & Pengumpulan Fakta / Data",
+            tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Eksploratif)",
+            dimensiProfil: "Penalaran Kritis & Kolaborasi",
+            deskripsi: `Kelompok membaca bahan ajar terpandu, mengamati media konkret seputar ${materi}, dan mengisi data awal LKPD.\nGuru berkeliling memberikan scaffolding bagi kelompok yang membutuhkan bimbingan bertahap.`,
+          },
+        ],
+        waktuPenutup: "10 Menit",
+        deskripsiPenutup: [
+          "Refleksi Singkat Berkesadaran: Murid menuliskan satu pemahaman kunci yang didapatkan hari ini.",
+          "Menyimpulkan progres investigasi Pertemuan 1 dan merapikan alat kerja bersama-sama.",
+          "Guru memberikan gambaran misi Pertemuan 2 (pembuatan karya dan penyajian solusi), doa penutup dan salam.",
+        ],
+      },
+      {
+        pertemuanKe: 2,
+        judulFokus: "Pertemuan 2: Mengaplikasi, Penyelesaian Proyek/LKPD, Unjuk Karya & Refleksi Menyeluruh",
+        alokasiWaktu: "2 x 35 Menit",
+        waktuPendahuluan: "10 Menit",
+        deskripsiPendahuluan: [
+          "Salam pembuka ceria, doa bersama, dan presensi kelas.",
+          "Ice breaking energik / 'Tepuk Semangat Belajar' untuk membangkitkan kegembiraan belajar (Joyful Learning).",
+          "Reviu kilat atas hasil investigasi Pertemuan 1 dan pengingat target karya yang akan diselesaikan.",
+          "Pemberian motivasi bahwa setiap kelompok memiliki potensi menghadirkan solusi kreatif terbaik.",
+        ],
+        waktuInti: "50 Menit",
+        sintakInti: [
+          {
+            sintakNomor: 3,
+            namaSintak: "Penyelidikan Lanjutan & Analisis Solusi Kelompok",
+            tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
+            dimensiProfil: "Penalaran Kritis & Kreativitas",
+            deskripsi: `Kelompok melanjutkan analisis data, merumuskan pemecahan masalah ${materi}, dan menyelesaikan tabel analisis LKPD.\nMurid menguji kelayakan gagasannya dengan saling memberikan masukan internal tim.`,
+          },
+          {
+            sintakNomor: 4,
+            namaSintak: "Mengembangkan dan Menyajikan Hasil Karya (Gelar Karya / Presentasi)",
+            tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Komunikasi & Kolaborasi)",
+            dimensiProfil: "Komunikasi & Kolaborasi",
+            deskripsi: `Kelompok memfinalisasi produk karya (lembar kreasi / peta konsep / laporan investigasi mini).\nPerwakilan tim mempresentasikan hasil karya di depan kelas atau melalui format 'Galeri Berjalan (Gallery Walk)'.\nKelompok lain memberikan umpan balik apresiatif dan pertanyaan tanggapan.`,
+          },
+          {
+            sintakNomor: 5,
+            namaSintak: "Menganalisis dan Mengevaluasi Proses Pemecahan Masalah",
+            tagDeepLearning: "DEEP LEARNING - MEREFLEKSI & MEMAHAMI",
+            dimensiProfil: "Penalaran Kritis",
+            deskripsi: `Guru bersama murid memvalidasi konsep materi ${materi} dan meluruskan miskonsepsi yang sempat muncul.\nGuru memberikan penguatan konseptual mendalam dan merayakan keberhasilan kolaborasi seluruh murid.`,
+          },
+        ],
+        waktuPenutup: "10 Menit",
+        deskripsiPenutup: [
+          "DEEP LEARNING – MEREFLEKSI: Murid mengisi refleksi 3-2-1 (3 hal yang dipelajari, 2 perasaan yang dialami, 1 aksi nyata yang akan dilakukan di rumah).",
+          "Pelaksanaan Asesmen Sumatif singkat (kuis pemahaman konsep HOTs).",
+          "Pemberian apresiasi bintang karya kepada semua kelompok, doa penutup penuh rasa syukur, dan salam.",
+        ],
+      },
+    ];
+  } else if (countPertemuan >= 3) {
+    daftarPertemuan = [
+      {
+        pertemuanKe: 1,
+        judulFokus: "Pertemuan 1: Memahami - Eksplorasi Stimulus Masalah & Fondasi Konseptual",
+        alokasiWaktu: "2 x 35 Menit",
+        waktuPendahuluan: "10 Menit",
+        deskripsiPendahuluan: [
+          "Orientasi, Salam Hangat, dan Doa bersama yang dipimpin oleh ketua kelas (Keimanan dan Ketaqwaan).",
+          "Mindful check-in dan asesmen awal kesiapan murid.",
+          `Apersepsi & Pertanyaan Pemantik kontekstual tentang fenomena ${materi} di lingkungan sekitar.`,
+          "Penyampaian tujuan rangkaian 3 pertemuan dan peta petualangan belajar.",
+        ],
+        waktuInti: "50 Menit",
+        sintakInti: [
+          {
+            sintakNomor: 1,
+            namaSintak: "Orientasi Masalah & Stimulasi Fenomena Nyata",
+            tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+            dimensiProfil: "Penalaran Kritis",
+            deskripsi: `Guru menyajikan video/fenomena konkret seputar ${materi}.\nMurid mengidentifikasi masalah utama dan menuliskan rasa ingin tahu pada papan gagasan.\nGuru membimbing pemahaman konsep dasar dan batasan penyelidikan.`,
+          },
+          {
+            sintakNomor: 2,
+            namaSintak: "Pengorganisasian Kelompok & Perencanaan Proyek/Investigasi",
+            tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kolaboratif)",
+            dimensiProfil: "Kolaborasi & Kemandirian",
+            deskripsi: `Pembentukan tim heterogen dan pembagian peran spesifik (Ketua, Notulis, Pencari Data, Desainer).\nKelompok menyusun rencana kerja investigasi dan membedah petunjuk LKPD.`,
+          },
+        ],
+        waktuPenutup: "10 Menit",
+        deskripsiPenutup: [
+          "Refleksi pemahaman awal: Murid merumuskan hipotesis kelompok.",
+          "Pemberian instruksi penyiapan bahan pendukung untuk investigasi mendalam di Pertemuan 2.",
+          "Doa dan salam penutup.",
+        ],
+      },
+      {
+        pertemuanKe: 2,
+        judulFokus: "Pertemuan 2: Mengaplikasi - Penyelidikan Mendalam, Eksperimen & Pembuatan Produk Solusi",
+        alokasiWaktu: "2 x 35 Menit",
+        waktuPendahuluan: "10 Menit",
+        deskripsiPendahuluan: [
+          "Salam pembuka, doa, dan cek kesiapan alat investigasi.",
+          "Ice breaking stimulasi fokus dan reviu hipotesis dari Pertemuan 1.",
+          "Pemberian target pengerjaan karya kreatif hari ini.",
+        ],
+        waktuInti: "50 Menit",
+        sintakInti: [
+          {
+            sintakNomor: 3,
+            namaSintak: "Membimbing Penyelidikan Mandiri & Kolaborasi Kelompok",
+            tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential & Joyful)",
+            dimensiProfil: "Penalaran Kritis & Kreativitas",
+            deskripsi: `Kelompok melakukan investigasi aktif, eksperimen konkret/studi data tentang ${materi}.\nMurid mencatat data penemuan pada tabel kerja LKPD dan memecahkan studi kasus.\nGuru mendampingi intensif kelompok yang membutuhkan bimbingan terarah (diferensiasi).`,
+          },
+          {
+            sintakNomor: 4,
+            namaSintak: "Mengembangkan Karya & Media Presentasi Interaktif",
+            tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Kreativitas & Kolaborasi)",
+            dimensiProfil: "Kreativitas & Kolaborasi",
+            deskripsi: `Kelompok menuangkan ide solusi dalam bentuk media unjuk karya (poster edukatif / infografis / model peraga mini).\nSetiap anggota memastikan karyanya siap dipamerkan pada pertemuan berikutnya.`,
+          },
+        ],
+        waktuPenutup: "10 Menit",
+        deskripsiPenutup: [
+          "Refleksi berkesadaran: Menilai kerja sama dan kepuasan atas proses berkarya.",
+          "Penyimpanan karya dengan rapi dan aman.",
+          "Doa dan salam penutup.",
+        ],
+      },
+      {
+        pertemuanKe: 3,
+        judulFokus: "Pertemuan 3: Merefleksi - Gelar Karya, Presentasi, Evaluasi Sumatif & Refleksi Menyeluruh",
+        alokasiWaktu: "2 x 35 Menit",
+        waktuPendahuluan: "10 Menit",
+        deskripsiPendahuluan: [
+          "Salam, doa bersama, dan penataan sudut pameran karya kelas (Galeri Belajar).",
+          "Penyampaian kriteria penilaian presentasi dan etika saling mengapresiasi antar-rekan.",
+        ],
+        waktuInti: "50 Menit",
+        sintakInti: [
+          {
+            sintakNomor: 4,
+            namaSintak: "Gelar Karya / Panggung Presentasi & Umpan Balik Teman",
+            tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Komunikasi & Apresiasi)",
+            dimensiProfil: "Komunikasi & Kewargaan",
+            deskripsi: `Pelaksanaan Galeri Berjalan (Gallery Walk) atau presentasi pleno di depan kelas.\nSetiap kelompok memaparkan karyanya dengan percaya diri.\nTempatkan stiker apresiasi (umpan balik positif dan konstruktif) dari kelompok lain.`,
+          },
+          {
+            sintakNomor: 5,
+            namaSintak: "Menganalisis & Mengevaluasi Proses serta Penguatan Konsep",
+            tagDeepLearning: "DEEP LEARNING - MEREFLEKSI & MEMAHAMI",
+            dimensiProfil: "Penalaran Kritis",
+            deskripsi: `Guru memberikan penguatan materi inti ${materi}, menyoroti temuan-temuan brilian murid, dan menyimpulkan pembelajaran secara komprehensif.`,
+          },
+        ],
+        waktuPenutup: "10 Menit",
+        deskripsiPenutup: [
+          "DEEP LEARNING – MEREFLEKSI: Jurnal refleksi holistik 3 pertemuan (Apa yang paling berkesan? Nilai baik apa yang akan kupraktikkan?).",
+          "Pelaksanaan Asesmen Sumatif pemahaman konsep 5 butir soal HOTs.",
+          "Perayaan belajar bersama dan doa penutup penuh rasa syukur.",
+        ],
+      },
+    ];
+  }
+
   return {
     id: `custom-${Date.now()}`,
     tahunAjaran: form.tahunAjaran || "2024/2025",
@@ -36,7 +245,11 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
     semester,
     mataPelajaran: mapel,
     materiPelajaran: materi,
-    alokasiWaktu: alokasi,
+    alokasiWaktu: countPertemuan > 1 && !alokasi.toLowerCase().includes("pertemuan")
+      ? `${countPertemuan} Pertemuan (${alokasi})`
+      : alokasi,
+    jumlahPertemuan: countPertemuan,
+    daftarPertemuan: daftarPertemuan,
     namaSekolah: form.namaSekolah || "SD Negeri Percontohan",
     namaKepsek: form.namaKepsek || "Drs. H. Mulyadi, M.Pd.",
     nipKepsek: form.nipKepsek || "19720415 199803 1 004",

@@ -51,6 +51,14 @@ export const ModuleDocumentView: React.FC<ModuleDocumentViewProps> = ({ module }
             <span className="w-44 font-bold text-slate-700">Mata Pelajaran</span>
             <span className="text-slate-900 font-semibold">: {module.mataPelajaran}</span>
           </div>
+          {module.jumlahPertemuan && module.jumlahPertemuan > 1 ? (
+            <div className="flex items-center">
+              <span className="w-44 font-bold text-emerald-800">Jumlah Pertemuan</span>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                : {module.jumlahPertemuan} Pertemuan
+              </span>
+            </div>
+          ) : null}
         </div>
         <div className="space-y-2">
           <div className="flex">
@@ -239,108 +247,229 @@ export const ModuleDocumentView: React.FC<ModuleDocumentViewProps> = ({ module }
           Tabel alur pembelajaran mendalam mengintegrasikan prinsip Memahami, Mengaplikasi, dan Merefleksi dengan sintak model pedagogis.
         </p>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-300">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100 border-b border-slate-300 text-slate-800">
-                <th className="p-3 font-bold border-r border-slate-300 w-1/4">Kegiatan</th>
-                <th className="p-3 font-bold border-r border-slate-300 w-7/12">Deskripsi Kegiatan</th>
-                <th className="p-3 font-bold text-center w-1/6">Alokasi Waktu</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {/* Pendahuluan */}
-              <tr className="hover:bg-slate-50/50">
-                <td className="p-3 border-r border-slate-200 align-top">
-                  <div className="font-bold text-slate-900 text-sm">Pendahuluan</div>
-                  <div className="text-[11px] text-emerald-700 italic font-semibold mt-0.5">
-                    (Memahami)
+        {module.daftarPertemuan && module.daftarPertemuan.length > 1 ? (
+          <div className="space-y-8">
+            {module.daftarPertemuan.map((pertemuan, pIdx) => (
+              <div key={pIdx} className="space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 bg-cyan-50/80 px-4 py-2.5 rounded-lg border border-cyan-200">
+                  <div className="font-bold text-cyan-950 text-sm flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-cyan-600"></span>
+                    <span>{pertemuan.judulFokus}</span>
                   </div>
-                </td>
-                <td className="p-3 border-r border-slate-200 text-slate-700">
-                  <ul className="space-y-1.5 list-disc pl-4">
-                    {module.deskripsiPendahuluan.map((item, idx) => (
-                      <li key={idx} className="leading-relaxed">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-                <td className="p-3 text-center align-middle font-semibold text-slate-700">
-                  {module.waktuPendahuluan}
-                </td>
-              </tr>
+                  <span className="text-xs font-semibold bg-white text-cyan-800 px-3 py-1 rounded-full border border-cyan-200 shadow-2xs">
+                    Alokasi: {pertemuan.alokasiWaktu}
+                  </span>
+                </div>
 
-              {/* Inti */}
-              <tr className="bg-slate-50/30 hover:bg-slate-50/80">
-                <td className="p-3 border-r border-slate-200 align-top">
-                  <div className="font-bold text-slate-900 text-sm">Inti</div>
-                  <div className="text-[11px] text-blue-700 italic font-semibold mt-0.5">
-                    (Memahami, Mengaplikasi)
-                  </div>
-                  <div className="mt-2 text-[10px] text-slate-500 leading-tight">
-                    Model: {module.modelPembelajaran}
-                  </div>
-                </td>
-                <td className="p-3 border-r border-slate-200 text-slate-700 space-y-4">
-                  {module.sintakInti.map((sintak) => (
-                    <div
-                      key={sintak.sintakNomor}
-                      className="p-3 bg-white rounded-lg border border-slate-200/90 shadow-2xs space-y-1.5"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900 text-xs">
-                          Sintak {sintak.sintakNomor}: {sintak.namaSintak}
-                        </span>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
-                          {sintak.tagDeepLearning}
-                        </span>
-                      </div>
-                      <div className="text-[11px] text-blue-700 font-medium">
-                        Profil Disasar: {sintak.dimensiProfil}
-                      </div>
-                      <div className="text-xs text-slate-700 space-y-1 pt-1">
-                        {sintak.deskripsi.split("\n").map((line, i) => (
-                          <p key={i} className="leading-relaxed pl-2 border-l border-emerald-400">
-                            {line}
-                          </p>
-                        ))}
-                      </div>
+                <div className="overflow-x-auto rounded-xl border border-slate-300">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-slate-100 border-b border-slate-300 text-slate-800">
+                        <th className="p-3 font-bold border-r border-slate-300 w-1/4">Kegiatan</th>
+                        <th className="p-3 font-bold border-r border-slate-300 w-7/12">Deskripsi Kegiatan</th>
+                        <th className="p-3 font-bold text-center w-1/6">Alokasi Waktu</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200">
+                      {/* Pendahuluan */}
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="p-3 border-r border-slate-200 align-top">
+                          <div className="font-bold text-slate-900 text-sm">Pendahuluan</div>
+                          <div className="text-[11px] text-emerald-700 italic font-semibold mt-0.5">
+                            (Memahami)
+                          </div>
+                        </td>
+                        <td className="p-3 border-r border-slate-200 text-slate-700">
+                          <ul className="space-y-1.5 list-disc pl-4">
+                            {pertemuan.deskripsiPendahuluan.map((item, idx) => (
+                              <li key={idx} className="leading-relaxed">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                        <td className="p-3 text-center align-middle font-semibold text-slate-700">
+                          {pertemuan.waktuPendahuluan}
+                        </td>
+                      </tr>
+
+                      {/* Inti */}
+                      <tr className="bg-slate-50/30 hover:bg-slate-50/80">
+                        <td className="p-3 border-r border-slate-200 align-top">
+                          <div className="font-bold text-slate-900 text-sm">Inti</div>
+                          <div className="text-[11px] text-blue-700 italic font-semibold mt-0.5">
+                            (Memahami, Mengaplikasi)
+                          </div>
+                          <div className="mt-2 text-[10px] text-slate-500 leading-tight">
+                            Model: {module.modelPembelajaran}
+                          </div>
+                        </td>
+                        <td className="p-3 border-r border-slate-200 text-slate-700 space-y-4">
+                          {pertemuan.sintakInti.map((sintak) => (
+                            <div
+                              key={sintak.sintakNomor}
+                              className="p-3 bg-white rounded-lg border border-slate-200/90 shadow-2xs space-y-1.5"
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-1">
+                                <span className="font-bold text-slate-900 text-xs">
+                                  Sintak {sintak.sintakNomor}: {sintak.namaSintak}
+                                </span>
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                                  {sintak.tagDeepLearning}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-blue-700 font-medium">
+                                Profil Disasar: {sintak.dimensiProfil}
+                              </div>
+                              <div className="text-xs text-slate-700 space-y-1 pt-1">
+                                {sintak.deskripsi.split("\n").map((line, i) => (
+                                  <p key={i} className="leading-relaxed pl-2 border-l border-emerald-400">
+                                    {line}
+                                  </p>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </td>
+                        <td className="p-3 text-center align-middle font-semibold text-slate-700">
+                          {pertemuan.waktuInti}
+                        </td>
+                      </tr>
+
+                      {/* Penutup */}
+                      <tr className="hover:bg-slate-50/50">
+                        <td className="p-3 border-r border-slate-200 align-top">
+                          <div className="font-bold text-slate-900 text-sm">Penutup</div>
+                          <div className="text-[11px] text-purple-700 italic font-semibold mt-0.5">
+                            (Merefleksi)
+                          </div>
+                        </td>
+                        <td className="p-3 border-r border-slate-200 text-slate-700">
+                          <div className="font-bold text-purple-800 mb-1 text-xs uppercase tracking-wide">
+                            DEEP LEARNING – MEREFLEKSI
+                          </div>
+                          <ul className="space-y-1.5 list-disc pl-4">
+                            {pertemuan.deskripsiPenutup.map((item, idx) => (
+                              <li key={idx} className="leading-relaxed">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                        <td className="p-3 text-center align-middle font-semibold text-slate-700">
+                          {pertemuan.waktuPenutup}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-xl border border-slate-300">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-100 border-b border-slate-300 text-slate-800">
+                  <th className="p-3 font-bold border-r border-slate-300 w-1/4">Kegiatan</th>
+                  <th className="p-3 font-bold border-r border-slate-300 w-7/12">Deskripsi Kegiatan</th>
+                  <th className="p-3 font-bold text-center w-1/6">Alokasi Waktu</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {/* Pendahuluan */}
+                <tr className="hover:bg-slate-50/50">
+                  <td className="p-3 border-r border-slate-200 align-top">
+                    <div className="font-bold text-slate-900 text-sm">Pendahuluan</div>
+                    <div className="text-[11px] text-emerald-700 italic font-semibold mt-0.5">
+                      (Memahami)
                     </div>
-                  ))}
-                </td>
-                <td className="p-3 text-center align-middle font-semibold text-slate-700">
-                  {module.waktuInti}
-                </td>
-              </tr>
+                  </td>
+                  <td className="p-3 border-r border-slate-200 text-slate-700">
+                    <ul className="space-y-1.5 list-disc pl-4">
+                      {module.deskripsiPendahuluan.map((item, idx) => (
+                        <li key={idx} className="leading-relaxed">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td className="p-3 text-center align-middle font-semibold text-slate-700">
+                    {module.waktuPendahuluan}
+                  </td>
+                </tr>
 
-              {/* Penutup */}
-              <tr className="hover:bg-slate-50/50">
-                <td className="p-3 border-r border-slate-200 align-top">
-                  <div className="font-bold text-slate-900 text-sm">Penutup</div>
-                  <div className="text-[11px] text-purple-700 italic font-semibold mt-0.5">
-                    (Merefleksi)
-                  </div>
-                </td>
-                <td className="p-3 border-r border-slate-200 text-slate-700">
-                  <div className="font-bold text-purple-800 mb-1 text-xs uppercase tracking-wide">
-                    DEEP LEARNING – MEREFLEKSI
-                  </div>
-                  <ul className="space-y-1.5 list-disc pl-4">
-                    {module.deskripsiPenutup.map((item, idx) => (
-                      <li key={idx} className="leading-relaxed">
-                        {item}
-                      </li>
+                {/* Inti */}
+                <tr className="bg-slate-50/30 hover:bg-slate-50/80">
+                  <td className="p-3 border-r border-slate-200 align-top">
+                    <div className="font-bold text-slate-900 text-sm">Inti</div>
+                    <div className="text-[11px] text-blue-700 italic font-semibold mt-0.5">
+                      (Memahami, Mengaplikasi)
+                    </div>
+                    <div className="mt-2 text-[10px] text-slate-500 leading-tight">
+                      Model: {module.modelPembelajaran}
+                    </div>
+                  </td>
+                  <td className="p-3 border-r border-slate-200 text-slate-700 space-y-4">
+                    {module.sintakInti.map((sintak) => (
+                      <div
+                        key={sintak.sintakNomor}
+                        className="p-3 bg-white rounded-lg border border-slate-200/90 shadow-2xs space-y-1.5"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-1">
+                          <span className="font-bold text-slate-900 text-xs">
+                            Sintak {sintak.sintakNomor}: {sintak.namaSintak}
+                          </span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                            {sintak.tagDeepLearning}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-blue-700 font-medium">
+                          Profil Disasar: {sintak.dimensiProfil}
+                        </div>
+                        <div className="text-xs text-slate-700 space-y-1 pt-1">
+                          {sintak.deskripsi.split("\n").map((line, i) => (
+                            <p key={i} className="leading-relaxed pl-2 border-l border-emerald-400">
+                              {line}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
                     ))}
-                  </ul>
-                </td>
-                <td className="p-3 text-center align-middle font-semibold text-slate-700">
-                  {module.waktuPenutup}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  </td>
+                  <td className="p-3 text-center align-middle font-semibold text-slate-700">
+                    {module.waktuInti}
+                  </td>
+                </tr>
+
+                {/* Penutup */}
+                <tr className="hover:bg-slate-50/50">
+                  <td className="p-3 border-r border-slate-200 align-top">
+                    <div className="font-bold text-slate-900 text-sm">Penutup</div>
+                    <div className="text-[11px] text-purple-700 italic font-semibold mt-0.5">
+                      (Merefleksi)
+                    </div>
+                  </td>
+                  <td className="p-3 border-r border-slate-200 text-slate-700">
+                    <div className="font-bold text-purple-800 mb-1 text-xs uppercase tracking-wide">
+                      DEEP LEARNING – MEREFLEKSI
+                    </div>
+                    <ul className="space-y-1.5 list-disc pl-4">
+                      {module.deskripsiPenutup.map((item, idx) => (
+                        <li key={idx} className="leading-relaxed">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td className="p-3 text-center align-middle font-semibold text-slate-700">
+                    {module.waktuPenutup}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* SECTION D. ASESMEN PEMBELAJARAN */}

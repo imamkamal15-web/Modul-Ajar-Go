@@ -15,6 +15,7 @@ import {
 import { DeepLearningModule } from "../types";
 import { GenerateFormValues, buildFallbackModule } from "../utils/generatorEngine";
 import { generateModuleMarkdown } from "../utils/markdownGenerator";
+import { parseMarkdownToModule } from "../utils/markdownParser";
 
 interface GeneratorModalProps {
   isOpen: boolean;
@@ -86,6 +87,7 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
     mataPelajaran: "Ilmu Pengetahuan Alam dan Sosial (IPAS)",
     materiPelajaran: "Fotosintesis: Proses Tumbuhan Menghasilkan Makanan dan Oksigen",
     alokasiWaktu: "2 x 35 Menit (1 Pertemuan)",
+    jumlahPertemuan: 1,
     modelPembelajaran: "Problem Based Learning (PBL) dipadu Gamifikasi",
     tahunAjaran: "2024/2025",
     namaSekolah: "SD Negeri Merdeka Belajar",
@@ -136,11 +138,15 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
       const data = await response.json();
 
       if (data.module) {
-        // Ensure raw markdown is generated or attached
         if (!data.module.rawMarkdown) {
           data.module.rawMarkdown = generateModuleMarkdown(data.module);
         }
         onGenerated(data.module);
+        onClose();
+        return;
+      } else if (data.markdown) {
+        const parsed = parseMarkdownToModule(data.markdown, form);
+        onGenerated(parsed);
         onClose();
         return;
       }
@@ -318,7 +324,7 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Model Pembelajaran
@@ -326,10 +332,10 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
                 <select
                   value={form.modelPembelajaran}
                   onChange={(e) => setForm({ ...form, modelPembelajaran: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
+                  className="w-full px-2.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
                 >
                   <option value="Problem Based Learning (PBL) dipadu Gamifikasi">
-                    Problem Based Learning (PBL) + Gamifikasi
+                    PBL + Gamifikasi
                   </option>
                   <option value="Project Based Learning (PjBL)">
                     Project Based Learning (PjBL)
@@ -348,14 +354,38 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Jumlah Pertemuan <span className="text-emerald-600 font-bold">★</span>
+                </label>
+                <select
+                  value={form.jumlahPertemuan || 1}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10);
+                    let defaultAlokasi = form.alokasiWaktu;
+                    if (val === 1) defaultAlokasi = "2 x 35 Menit (1 Pertemuan)";
+                    else if (val === 2) defaultAlokasi = "4 x 35 Menit (2 Pertemuan)";
+                    else if (val === 3) defaultAlokasi = "6 x 35 Menit (3 Pertemuan)";
+                    else if (val === 4) defaultAlokasi = "8 x 35 Menit (4 Pertemuan)";
+                    setForm({ ...form, jumlahPertemuan: val, alokasiWaktu: defaultAlokasi });
+                  }}
+                  className="w-full px-2.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50/40 text-emerald-950 font-medium focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
+                >
+                  <option value={1}>1 Pertemuan</option>
+                  <option value={2}>2 Pertemuan</option>
+                  <option value={3}>3 Pertemuan</option>
+                  <option value={4}>4 Pertemuan</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Alokasi Waktu
                 </label>
                 <input
                   type="text"
                   value={form.alokasiWaktu}
                   onChange={(e) => setForm({ ...form, alokasiWaktu: e.target.value })}
-                  placeholder="2 x 35 Menit (1 Pertemuan)"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
+                  placeholder="2 x 35 Menit"
+                  className="w-full px-2.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
                 />
               </div>
             </div>

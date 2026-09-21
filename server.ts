@@ -4,6 +4,8 @@ import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import { buildFallbackModule } from "./src/utils/generatorEngine";
+import { generateModuleMarkdown } from "./src/utils/markdownGenerator";
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ app.post("/api/generate-module", async (req, res) => {
       mataPelajaran,
       materiPelajaran,
       alokasiWaktu,
+      jumlahPertemuan,
       modelPembelajaran,
       namaSekolah,
       namaGuru,
@@ -60,6 +63,12 @@ app.post("/api/generate-module", async (req, res) => {
       kota,
       catatanTambahan,
     } = req.body;
+
+    let targetPertemuan = Number(jumlahPertemuan) || 1;
+    if (!jumlahPertemuan && alokasiWaktu) {
+      const match = alokasiWaktu.match(/(\d+)\s*pertemuan/i);
+      if (match) targetPertemuan = Math.max(1, parseInt(match[1], 10));
+    }
 
     const client = getGeminiClient();
 
@@ -120,12 +129,29 @@ STRUKTUR DOKUMEN WAJIB:
 ---
 
 ## C. PENGALAMAN BELAJAR
+${targetPertemuan > 1 ? `
+*(MANDATORI: Modul ini dirancang untuk ${targetPertemuan} Pertemuan. Anda WAJIB membuat ${targetPertemuan} sub-seksi "### Pertemuan X" dengan tabel kegiatan masing-masing!)*
 
+### Pertemuan 1: [Fokus & Judul Pertemuan 1] (Alokasi: [Waktu Pertemuan 1])
+| Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
+| :--- | :--- | :--- |
+| **Pendahuluan**<br>*(Memahami)* | • Orientasi, Salam, Doa, Apersepsi & Pemantik Berkesadaran | ... Menit |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sintak Model Pembelajaran tahap awal/eksplorasi konsep, Tag DEEP LEARNING)* | ... Menit |
+| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi berkesadaran, kesimpulan, tindak lanjut | ... Menit |
+
+### Pertemuan 2: [Fokus & Judul Pertemuan 2] (Alokasi: [Waktu Pertemuan 2])
+| Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
+| :--- | :--- | :--- |
+| **Pendahuluan**<br>*(Memahami)* | • Orientasi, Review pertemuan 1, Apersepsi lanjutan | ... Menit |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sintak Model Pembelajaran tahap lanjutan/penyelesaian karya/presentasi, Tag DEEP LEARNING)* | ... Menit |
+| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi menyeluruh, umpan balik konstruktif, apresiasi | ... Menit |
+` : `
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
 | :--- | :--- | :--- |
 | **Pendahuluan**<br>*(Memahami)* | • Orientasi, Salam, Doa (Keimanan dan Ketaqwaan).<br>• Cek kehadiran, kenyamanan kelas, dan kesiapan belajar (mindfulness/senam otak singkat).<br>• Apersepsi & Pertanyaan Pemantik Berkesadaran yang menstimulasi rasa ingin tahu.<br>• Penyampaian Tujuan Pembelajaran, alur aktivitas menggembirakan, dan kesepakatan belajar. | ... Menit |
 | **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sertakan Sintak Model Pembelajaran yang dipilih, tag DEEP LEARNING - MEMAHAMI / MENGAPLIKASI, serta integrasi Dimensi Profil Lulusan).*<br><br>**Sintak 1: [Orientasi Murid pada Masalah / Stimulasi]**<br>• [Uraian aktivitas eksploratif dan pemantik]<br><br>**Sintak 2: [Mengorganisasi Murid untuk Belajar]**<br>• [Pembagian kelompok diferensiasi & pembagian peran tim]<br><br>**Sintak 3: [Membimbing Penyelidikan / Eksplorasi Mandiri & Kelompok]**<br>• [Aktivitas hands-on / eksperimen / penelusuran fakta]<br><br>**Sintak 4: [Mengembangkan dan Menyajikan Hasil Karya]**<br>• [Pembuatan produk/laporan kreatif & presentasi interaktif]<br><br>**Sintak 5: [Menganalisis dan Mengevaluasi Proses Pemecahan Masalah]**<br>• [Refleksi proses, konfirmasi konsep, dan apresiasi guru] | ... Menit |
 | **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi berkesadaran murid (pertanyaan pemantik reflektif 3-2-1).<br>• Menyimpulkan pembelajaran bersama murid secara bermakna.<br>• Asesmen Sumatif singkat / kuis interaktif 5 menit.<br>• Tindak lanjut, motivasi inspiratif, dan Doa penutup. | ... Menit |
+`}
 
 ---
 
@@ -235,6 +261,7 @@ NIP. ${nipGuru || "NIP. ........................."}
 - Jenjang: ${jenjang || "SD"}
 - Tahun Ajaran: ${tahunAjaran || "2024/2025"}
 - Alokasi Waktu: ${alokasiWaktu || "2 x 35 Menit (1 Pertemuan)"}
+- Jumlah Pertemuan: ${targetPertemuan} Pertemuan (WAJIB sediakan ${targetPertemuan} sub-seksi pertemuan lengkap di Bagian C)
 - Model Pembelajaran: ${modelPembelajaran || "Problem Based Learning dipadu Gamifikasi Eksploratif"}
 - Satuan Pendidikan: ${namaSekolah || "SD Negeri Percontohan"}
 - Guru: ${namaGuru || "Guru Penggerak"} (NIP: ${nipGuru || "-"})
@@ -244,37 +271,124 @@ ${catatanTambahan ? `- Catatan Khusus / Diferensiasi: ${catatanTambahan}` : ""}
 
 Pastikan output adalah Markdown utuh yang siap pakai, mematuhi semua tabel, tanpa terpotong!`;
 
-    if (client) {
-      const response = await client.models.generateContent({
-        model: "gemini-3.8-flash",
-        contents: userPrompt,
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.7,
-        },
-      });
+    let generatedMarkdown = "";
+    let usedSource = "gemini";
+    let noticeMessage = "";
 
-      const generatedMarkdown = response.text || "";
-      if (generatedMarkdown.trim().length > 200) {
-        return res.json({
-          success: true,
-          markdown: generatedMarkdown,
-          source: "gemini",
-        });
+    if (client) {
+      // Prioritize high-capacity, low-latency models with fallback chain
+      const candidateModels = [
+        "gemini-3.1-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-flash-latest",
+      ];
+
+      for (const modelCandidate of candidateModels) {
+        let attempts = 0;
+        const maxAttempts = 2;
+        let success = false;
+
+        while (attempts < maxAttempts && !success) {
+          attempts++;
+          try {
+            const response = await client.models.generateContent({
+              model: modelCandidate,
+              contents: userPrompt,
+              config: {
+                systemInstruction: systemPrompt,
+                temperature: 0.7,
+              },
+            });
+
+            if (response.text && response.text.trim().length > 200) {
+              generatedMarkdown = response.text.trim();
+              usedSource = `gemini (${modelCandidate})`;
+              success = true;
+              break;
+            }
+          } catch (apiError: any) {
+            const isTransient =
+              apiError?.status === "UNAVAILABLE" ||
+              apiError?.code === 503 ||
+              apiError?.status === 503 ||
+              String(apiError?.message || "").includes("503") ||
+              String(apiError?.message || "").includes("high demand") ||
+              String(apiError?.message || "").includes("Resource has been exhausted") ||
+              apiError?.code === 429;
+
+            if (isTransient) {
+              noticeMessage = "Model utama sedang mengalami lonjakan beban, beralih ke jalur komputasi optimal.";
+              if (attempts < maxAttempts) {
+                // Short wait before retry attempt
+                await new Promise((resolve) => setTimeout(resolve, 800));
+                continue;
+              }
+            }
+            // Move to next candidate model
+            break;
+          }
+        }
+
+        if (success) {
+          break;
+        }
       }
     }
 
-    // Fallback if client is unavailable or returns short
+    // If Gemini was unavailable or returned empty, build high-fidelity fallback module
+    if (!generatedMarkdown) {
+      const fallbackModule = buildFallbackModule({
+        tahunAjaran,
+        jenjang,
+        fase,
+        kelas,
+        semester,
+        mataPelajaran,
+        materiPelajaran,
+        alokasiWaktu,
+        jumlahPertemuan: targetPertemuan,
+        modelPembelajaran,
+        namaSekolah,
+        namaGuru,
+        nipGuru,
+        namaKepsek,
+        nipKepsek,
+        kota,
+        catatanTambahan,
+      });
+
+      generatedMarkdown = generateModuleMarkdown(fallbackModule);
+      usedSource = "kurikulum-engine";
+      if (!noticeMessage) {
+        noticeMessage = "Modul dirancang otomatis oleh Mesin Instruksional Deep Learning Kurikulum Merdeka.";
+      }
+    }
+
     return res.json({
-      success: false,
-      message: "Client not configured or empty response",
+      success: true,
+      markdown: generatedMarkdown,
+      source: usedSource,
+      notice: noticeMessage || undefined,
     });
   } catch (error: any) {
     console.error("Error generating module:", error);
-    res.status(500).json({
-      success: false,
-      error: error.message || "Failed to generate module",
-    });
+    // Even in unexpected server exceptions, provide a safe fallback so user workflow is never disrupted
+    try {
+      const safeJumlah = req.body?.jumlahPertemuan || (req.body?.alokasiWaktu?.match(/(\d+)\s*pertemuan/i)?.[1] ? parseInt(req.body.alokasiWaktu.match(/(\d+)\s*pertemuan/i)[1], 10) : 1);
+      const safeModule = buildFallbackModule({ ...(req.body || {}), jumlahPertemuan: safeJumlah });
+      const safeMarkdown = generateModuleMarkdown(safeModule);
+      return res.json({
+        success: true,
+        markdown: safeMarkdown,
+        source: "emergency-fallback",
+        notice: "Modul dirancang menggunakan cadangan darurat instruksional.",
+      });
+    } catch {
+      res.status(500).json({
+        success: false,
+        error: error.message || "Failed to generate module",
+      });
+    }
   }
 });
 

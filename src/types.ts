@@ -20,6 +20,18 @@ export interface SintakIntiItem {
   dimensiProfil: string;
 }
 
+export interface PertemuanItem {
+  pertemuanKe: number;
+  judulFokus: string;
+  alokasiWaktu: string;
+  waktuPendahuluan: string;
+  deskripsiPendahuluan: string[];
+  waktuInti: string;
+  sintakInti: SintakIntiItem[];
+  waktuPenutup: string;
+  deskripsiPenutup: string[];
+}
+
 export interface SoalEvaluasi {
   no: number;
   indikator: string;
@@ -50,6 +62,8 @@ export interface DeepLearningModule {
   mataPelajaran: string;
   materiPelajaran: string;
   alokasiWaktu: string;
+  jumlahPertemuan?: number;
+  daftarPertemuan?: PertemuanItem[];
   
   // Data Sekolah & Pendidik
   namaSekolah: string;

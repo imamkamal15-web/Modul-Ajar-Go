@@ -58,13 +58,39 @@ export function generateModuleMarkdown(module: DeepLearningModule): string {
     lkpdTable = `\n**Tabel Kerja / Hasil Investigasi Siswa:**\n${header}\n${separator}\n${rows}\n`;
   }
 
+  // Format Section C: Pengalaman Belajar (Single or Multi-Pertemuan)
+  let pengalamanBelajarMarkdown = "";
+  if (module.daftarPertemuan && module.daftarPertemuan.length > 1) {
+    pengalamanBelajarMarkdown = module.daftarPertemuan
+      .map((p) => {
+        const pSintak = p.sintakInti
+          .map(
+            (s) =>
+              `**Sintak ${s.sintakNomor}: ${s.namaSintak}**<br>• *Tag*: ${s.tagDeepLearning}<br>• *Profil Lulusan*: ${s.dimensiProfil}<br>• *Aktivitas*: ${s.deskripsi.replace(/\n/g, "<br>• ")}`
+          )
+          .join("<br><br>");
+
+        const pPendahuluan = p.deskripsiPendahuluan.map((d) => `• ${d}`).join("<br>");
+        const pPenutup = p.deskripsiPenutup.map((d) => `• ${d}`).join("<br>");
+
+        return `### ${p.judulFokus} (Alokasi: ${p.alokasiWaktu})\n\n| Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |\n| :--- | :--- | :--- |\n| **Pendahuluan**<br>*(Memahami)* | ${pPendahuluan} | ${p.waktuPendahuluan} |\n| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Integrasi Sintak Model ${module.modelPembelajaran}, tag DEEP LEARNING, serta Dimensi Profil Lulusan).*<br><br>${pSintak} | ${p.waktuInti} |\n| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>${pPenutup} | ${p.waktuPenutup} |`;
+      })
+      .join("\n\n---\n\n");
+  } else {
+    pengalamanBelajarMarkdown = `| Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
+| :--- | :--- | :--- |
+| **Pendahuluan**<br>*(Memahami)* | ${pendahuluanText} | ${module.waktuPendahuluan} |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Integrasi Sintak Model ${module.modelPembelajaran}, tag DEEP LEARNING, serta Dimensi Profil Lulusan).*<br><br>${sintakText} | ${module.waktuInti} |
+| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>${penutupText} | ${module.waktuPenutup} |`;
+  }
+
   return `# PERENCANAAN PEMBELAJARAN MENDALAM (DEEP LEARNING)
 
 **Tahun Ajaran** : ${module.tahunAjaran}
 **Kelas / Fase / Semester** : ${module.kelas} / ${module.fase} / ${module.semester}
 **Mata Pelajaran** : ${module.mataPelajaran}
 **Materi Pelajaran** : ${module.materiPelajaran}
-**Alokasi Waktu** : ${module.alokasiWaktu}
+**Alokasi Waktu** : ${module.alokasiWaktu}${module.jumlahPertemuan && module.jumlahPertemuan > 1 ? `\n**Jumlah Pertemuan** : ${module.jumlahPertemuan} Pertemuan` : ""}
 
 ---
 
@@ -97,11 +123,7 @@ ${dimensiText}
 
 ## C. PENGALAMAN BELAJAR
 
-| Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
-| :--- | :--- | :--- |
-| **Pendahuluan**<br>*(Memahami)* | ${pendahuluanText} | ${module.waktuPendahuluan} |
-| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Integrasi Sintak Model ${module.modelPembelajaran}, tag DEEP LEARNING, serta Dimensi Profil Lulusan).*<br><br>${sintakText} | ${module.waktuInti} |
-| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>${penutupText} | ${module.waktuPenutup} |
+${pengalamanBelajarMarkdown}
 
 ---
 
