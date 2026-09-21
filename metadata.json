@@ -1,0 +1,6 @@
+{
+  "name": "Perencana Pembelajaran Mendalam (Deep Learning)",
+  "description": "Generator dan perancang Modul Pembelajaran Mendalam (Deep Learning) Kurikulum Merdeka lengkap dengan identifikasi, pengalaman belajar, LKPD, dan rubrik asesmen siap pakai.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
