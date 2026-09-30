@@ -133,7 +133,7 @@ STRUKTUR DOKUMEN WAJIB:
 
 ## C. PENGALAMAN BELAJAR
 ${targetPertemuan > 1 ? `
-*(MANDATORI: Modul ini dirancang untuk ${targetPertemuan} Pertemuan. Anda WAJIB membuat ${targetPertemuan} sub-seksi "### Pertemuan X" dengan tabel kegiatan masing-masing!)*
+*(MANDATORI: Modul ini dirancang untuk ${targetPertemuan} Pertemuan. Anda WAJIB membuat seluruh sub-seksi dari "### Pertemuan 1" sampai "### Pertemuan ${targetPertemuan}" dengan tabel kegiatan masing-masing (Pendahuluan, Inti, Penutup)!)*
 
 ### Pertemuan 1: [Fokus & Judul Pertemuan 1] (Alokasi: [Waktu Pertemuan 1])
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
@@ -142,12 +142,14 @@ ${targetPertemuan > 1 ? `
 | **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sintak Model Pembelajaran tahap awal/eksplorasi konsep, Tag DEEP LEARNING)* | ... Menit |
 | **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi berkesadaran, kesimpulan, tindak lanjut | ... Menit |
 
-### Pertemuan 2: [Fokus & Judul Pertemuan 2] (Alokasi: [Waktu Pertemuan 2])
+... (lanjutkan berurutan hingga Pertemuan ${targetPertemuan}) ...
+
+### Pertemuan ${targetPertemuan}: [Fokus & Judul Pertemuan Akhir - Unjuk Karya / Evaluasi / Refleksi Holistik] (Alokasi: [Waktu Pertemuan ${targetPertemuan}])
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
 | :--- | :--- | :--- |
-| **Pendahuluan**<br>*(Memahami)* | • Orientasi, Review pertemuan 1, Apersepsi lanjutan | ... Menit |
-| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sintak Model Pembelajaran tahap lanjutan/penyelesaian karya/presentasi, Tag DEEP LEARNING)* | ... Menit |
-| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi menyeluruh, umpan balik konstruktif, apresiasi | ... Menit |
+| **Pendahuluan**<br>*(Memahami)* | • Orientasi, Review progres modul, Pengkondisian unjuk karya / evaluasi | ... Menit |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Penyelesaian karya / presentasi / gelar karya / evaluasi sumatif, Tag DEEP LEARNING)* | ... Menit |
+| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi menyeluruh, rencana aksi nyata, perayaan belajar, doa penutup | ... Menit |
 ` : `
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
 | :--- | :--- | :--- |

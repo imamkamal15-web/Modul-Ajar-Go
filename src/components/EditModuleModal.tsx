@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Save, Edit3, School, BookOpen } from "lucide-react";
 import { DeepLearningModule } from "../types";
 import { generateModuleMarkdown } from "../utils/markdownGenerator";
+import { buildFallbackModule } from "../utils/generatorEngine";
 
 interface EditModuleModalProps {
   isOpen: boolean;
@@ -138,16 +139,72 @@ export const EditModuleModal: React.FC<EditModuleModalProps> = ({
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Alokasi Waktu
-            </label>
-            <input
-              type="text"
-              value={formData.alokasiWaktu}
-              onChange={(e) => setFormData({ ...formData, alokasiWaktu: e.target.value })}
-              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Jumlah Pertemuan (Maks. 15)
+              </label>
+              <select
+                value={formData.jumlahPertemuan || 1}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value, 10);
+                  const updated: DeepLearningModule = {
+                    ...formData,
+                    jumlahPertemuan: val,
+                    alokasiWaktu:
+                      val > 1 && !formData.alokasiWaktu.includes("Pertemuan")
+                        ? `${val * 2} x 35 Menit (${val} Pertemuan)`
+                        : formData.alokasiWaktu,
+                  };
+                  if (val > 1 && (!updated.daftarPertemuan || updated.daftarPertemuan.length !== val)) {
+                    const regenerated = buildFallbackModule({
+                      jenjang: "SD",
+                      fase: updated.fase,
+                      kelas: updated.kelas,
+                      semester: updated.semester,
+                      mataPelajaran: updated.mataPelajaran,
+                      materiPelajaran: updated.materiPelajaran,
+                      alokasiWaktu: updated.alokasiWaktu,
+                      jumlahPertemuan: val,
+                      modelPembelajaran: updated.modelPembelajaran,
+                      tahunAjaran: updated.tahunAjaran,
+                      namaSekolah: updated.namaSekolah,
+                      namaGuru: updated.namaGuru,
+                      nipGuru: updated.nipGuru,
+                      namaKepsek: updated.namaKepsek,
+                      nipKepsek: updated.nipKepsek,
+                      kota: updated.kota,
+                      capaianPembelajaran: updated.capaianPembelajaran,
+                      tujuanPembelajaran: updated.tujuanPembelajaran,
+                    });
+                    if (regenerated.daftarPertemuan) {
+                      updated.daftarPertemuan = regenerated.daftarPertemuan;
+                    }
+                  } else if (val === 1) {
+                    updated.daftarPertemuan = undefined;
+                  }
+                  setFormData(updated);
+                }}
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white"
+              >
+                {Array.from({ length: 15 }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    {n} Pertemuan
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Alokasi Waktu
+              </label>
+              <input
+                type="text"
+                value={formData.alokasiWaktu}
+                onChange={(e) => setFormData({ ...formData, alokasiWaktu: e.target.value })}
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+              />
+            </div>
           </div>
 
           <div className="space-y-3 border-t border-slate-200 pt-3">

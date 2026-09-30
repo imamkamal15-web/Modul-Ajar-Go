@@ -440,19 +440,17 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
                   value={form.jumlahPertemuan || 1}
                   onChange={(e) => {
                     const val = parseInt(e.target.value, 10);
-                    let defaultAlokasi = form.alokasiWaktu;
+                    let defaultAlokasi = `${val * 2} x 35 Menit (${val} Pertemuan)`;
                     if (val === 1) defaultAlokasi = "2 x 35 Menit (1 Pertemuan)";
-                    else if (val === 2) defaultAlokasi = "4 x 35 Menit (2 Pertemuan)";
-                    else if (val === 3) defaultAlokasi = "6 x 35 Menit (3 Pertemuan)";
-                    else if (val === 4) defaultAlokasi = "8 x 35 Menit (4 Pertemuan)";
                     setForm({ ...form, jumlahPertemuan: val, alokasiWaktu: defaultAlokasi });
                   }}
                   className="w-full px-2.5 py-2 rounded-lg border border-emerald-300 bg-emerald-50/40 text-emerald-950 font-medium focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
                 >
-                  <option value={1}>1 Pertemuan</option>
-                  <option value={2}>2 Pertemuan</option>
-                  <option value={3}>3 Pertemuan</option>
-                  <option value={4}>4 Pertemuan</option>
+                  {Array.from({ length: 15 }, (_, i) => i + 1).map((num) => (
+                    <option key={num} value={num}>
+                      {num} Pertemuan
+                    </option>
+                  ))}
                 </select>
               </div>
 
