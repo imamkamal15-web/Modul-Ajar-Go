@@ -1,5 +1,6 @@
 import React from "react";
 import { DeepLearningModule } from "../types";
+import { getRubrikDimensi } from "../utils/generatorEngine";
 import {
   CheckCircle,
   HelpCircle,
@@ -527,7 +528,7 @@ export const ModuleDocumentView: React.FC<ModuleDocumentViewProps> = ({ module }
           LAMPIRAN-LAMPIRAN
         </h2>
         <p className="text-xs text-slate-500 font-medium">
-          Materi Ajar, LKPD Interaktif, Rubrik Observasi Sikap 7 Dimensi, Kisi-Kisi Soal Evaluasi, dan Penilaian Keterampilan
+          Materi Ajar, LKPD Interaktif, Rubrik Observasi Sikap Dimensi Profil Lulusan, Kisi-Kisi Soal Evaluasi, dan Penilaian Keterampilan
         </p>
       </div>
 
@@ -690,48 +691,58 @@ export const ModuleDocumentView: React.FC<ModuleDocumentViewProps> = ({ module }
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 text-slate-700">
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">1</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Keimanan dan Ketaqwaan</td>
-                <td className="p-2.5 border-r border-slate-200">• Berdoa sebelum & sesudah kegiatan.<br />• Khusyuk dan bersikap baik.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">2</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Kewargaan</td>
-                <td className="p-2.5 border-r border-slate-200">• Peduli & menghargai teman.<br />• Menggunakan bahasa santun.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">3</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Penalaran Kritis</td>
-                <td className="p-2.5 border-r border-slate-200">• Mampu mengidentifikasi & menganalisis masalah.<br />• Reflektif dalam memecahkan tugas.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">4</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Kreativitas</td>
-                <td className="p-2.5 border-r border-slate-200">• Mampu membuat ide/karya unik.<br />• Antusias menyelesaikan tantangan.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">5</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Kolaborasi</td>
-                <td className="p-2.5 border-r border-slate-200">• Aktif bekerja sama dalam tim.<br />• Membantu teman yang kesulitan.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">6</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Kemandirian</td>
-                <td className="p-2.5 border-r border-slate-200">• Mengelola waktu pengerjaan tugas.<br />• Percaya diri menyampaikan pendapat.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 text-center font-bold border-r border-slate-200">7</td>
-                <td className="p-2.5 font-bold border-r border-slate-200">Komunikasi</td>
-                <td className="p-2.5 border-r border-slate-200">• Menyampaikan argumen dengan santun.<br />• Menyajikan hasil diskusi dengan jelas.</td>
-                <td className="p-2.5 text-center text-[11px]">3 = 3 aspek<br />2 = 2 aspek<br />1 = 1 aspek</td>
-              </tr>
+              {(() => {
+                const activeDimensi = (module.dimensiProfilLulusan || []).filter(
+                  (d) => d.checked !== false
+                );
+                if (activeDimensi.length === 0) {
+                  return (
+                    <tr className="hover:bg-slate-50">
+                      <td className="p-2.5 text-center font-bold border-r border-slate-200 align-top">
+                        1
+                      </td>
+                      <td className="p-2.5 font-bold border-r border-slate-200 align-top">
+                        Sikap Umum & Pembiasaan Karakter
+                      </td>
+                      <td className="p-2.5 border-r border-slate-200 leading-relaxed align-top">
+                        • Disiplin dalam waktu dan kesepakatan belajar kelas.<br />
+                        • Tanggung jawab menyelesaikan tugas hingga tuntas.<br />
+                        • Santun dan menghargai teman sekelas serta guru.
+                      </td>
+                      <td className="p-2.5 text-center text-[11px] align-top whitespace-pre-line text-slate-600">
+                        3 = Memenuhi 3 aspek<br />
+                        2 = Memenuhi 2 aspek<br />
+                        1 = Memenuhi 1 aspek
+                      </td>
+                    </tr>
+                  );
+                }
+
+                return activeDimensi.map((dim, idx) => {
+                  const rubrik = getRubrikDimensi(dim);
+                  return (
+                    <tr key={dim.key || idx} className="hover:bg-slate-50">
+                      <td className="p-2.5 text-center font-bold border-r border-slate-200 align-top">
+                        {idx + 1}
+                      </td>
+                      <td className="p-2.5 font-bold border-r border-slate-200 align-top">
+                        <span>{dim.label}</span>
+                        {dim.penjelasan && (
+                          <p className="font-normal text-[11px] text-slate-500 mt-1 italic leading-snug">
+                            {dim.penjelasan}
+                          </p>
+                        )}
+                      </td>
+                      <td className="p-2.5 border-r border-slate-200 whitespace-pre-line leading-relaxed align-top">
+                        {rubrik.indikator}
+                      </td>
+                      <td className="p-2.5 text-center text-[11px] align-top whitespace-pre-line text-slate-600">
+                        {rubrik.skor}
+                      </td>
+                    </tr>
+                  );
+                });
+              })()}
             </tbody>
           </table>
         </div>

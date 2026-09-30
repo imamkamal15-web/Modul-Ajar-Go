@@ -465,7 +465,7 @@ Tumbuhan berkedudukan sebagai **Produsen Primer**. Hewan herbivora memakan tumbu
       "Doa penutup dan salam.",
     ],
 
-    asesmenFormatifSikap: "Jurnal Observasi 7 Dimensi Profil Lulusan selama diskusi kelompok dan kerja manipulatif.",
+    asesmenFormatifSikap: "Jurnal Observasi Dimensi Profil Lulusan selama diskusi kelompok dan kerja manipulatif.",
     asesmenFormatifKeterampilan: "Rubrik unjuk kerja memvisualisasikan pecahan senilai dan akurasi penyelesaian tantangan resep.",
     asesmenSumatifDeskripsi: "Kuis tertulis 5 soal (C3-C5) dengan skor maksimal 30 poin, konversi ke skala 100.",
 

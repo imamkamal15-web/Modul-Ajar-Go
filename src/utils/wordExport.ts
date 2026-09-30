@@ -1,5 +1,6 @@
 import { DeepLearningModule } from "../types";
 import { generateModuleMarkdown } from "./markdownGenerator";
+import { getRubrikDimensi } from "./generatorEngine";
 
 export function exportToWordDoc(module: DeepLearningModule) {
   // Build Section C HTML for either Single or Multi-Pertemuan
@@ -220,6 +221,33 @@ export function exportToWordDoc(module: DeepLearningModule) {
   const mid = Math.ceil(activeDimensi.length / 2);
   const col1 = activeDimensi.slice(0, mid);
   const col2 = activeDimensi.slice(mid);
+
+  // Synchronized Rubrik Sikap table rows (Lampiran 3)
+  const rubrikSikapTableRows =
+    activeDimensi.length > 0
+      ? activeDimensi
+          .map((dim, idx) => {
+            const rubrik = getRubrikDimensi(dim);
+            const isOdd = idx % 2 === 1;
+            return `
+        <tr style="${isOdd ? "background-color: #f8fafc;" : ""}">
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; vertical-align: top;">${idx + 1}</td>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold; vertical-align: top;">
+            ${dim.label}
+            ${dim.penjelasan ? `<div style="font-weight: normal; font-size: 8.5pt; color: #64748b; margin-top: 3pt; font-style: italic;">${dim.penjelasan}</div>` : ""}
+          </td>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; vertical-align: top; line-height: 1.5;">${rubrik.indikator.replace(/\n/g, "<br/>")}</td>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt; vertical-align: top; line-height: 1.4;">${rubrik.skor.replace(/\n/g, "<br/>")}</td>
+        </tr>`;
+          })
+          .join("")
+      : `
+        <tr>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; vertical-align: top;">1</td>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold; vertical-align: top;">Sikap Umum & Pembiasaan Karakter</td>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; vertical-align: top; line-height: 1.5;">• Disiplin dalam waktu dan kesepakatan belajar kelas.<br/>• Tanggung jawab menyelesaikan tugas hingga tuntas.<br/>• Santun dan menghargai teman sekelas serta guru.</td>
+          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt; vertical-align: top; line-height: 1.4;">3 = Memenuhi 3 aspek terpenuhi<br/>2 = Memenuhi 2 aspek terpenuhi<br/>1 = Memenuhi 1 aspek terpenuhi</td>
+        </tr>`;
 
   const dimensiCardsHtml =
     activeDimensi.length > 0
@@ -753,54 +781,13 @@ export function exportToWordDoc(module: DeepLearningModule) {
       <thead>
         <tr style="background-color: #f1f5f9;">
           <th style="width: 6%; border: 1pt solid #94a3b8; padding: 6pt; text-align: center;">No</th>
-          <th style="width: 28%; border: 1pt solid #94a3b8; padding: 6pt; text-align: left;">Aspek Pengamatan (7 Dimensi)</th>
+          <th style="width: 28%; border: 1pt solid #94a3b8; padding: 6pt; text-align: left;">Aspek Pengamatan (Dimensi Profil Lulusan)</th>
           <th style="width: 46%; border: 1pt solid #94a3b8; padding: 6pt; text-align: left;">Kriteria Indikator</th>
           <th style="width: 20%; border: 1pt solid #94a3b8; padding: 6pt; text-align: center;">Skor</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">1</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Keimanan dan Ketaqwaan</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Berdoa sebelum & sesudah kegiatan.<br/>• Khusyuk dan menunjukkan sikap terpuji.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
-        <tr style="background-color: #f8fafc;">
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">2</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Kewargaan</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Menghargai teman sebaya.<br/>• Menggunakan bahasa santun dan taat aturan kelas.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
-        <tr>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">3</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Penalaran Kritis</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Mampu mengidentifikasi fakta & menganalisis masalah.<br/>• Mengajukan pertanyaan reflektif bernalar.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
-        <tr style="background-color: #f8fafc;">
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">4</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Kreativitas</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Menyajikan ide orisinal dan solusi alternatif unik.<br/>• Antusias merancang produk karya.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
-        <tr>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">5</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Kolaborasi</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Berbagi tugas secara adil & aktif berpartisipasi.<br/>• Membantu rekan kelompok yang mengalami kesulitan.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
-        <tr style="background-color: #f8fafc;">
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">6</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Kemandirian</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Mampu mengelola waktu pengerjaan tugas.<br/>• Percaya diri mengambil inisiatif tanpa bergantung penuh.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
-        <tr>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center;">7</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; font-weight: bold;">Komunikasi</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt;">• Menyampaikan gagasan dengan runut dan artikulatif.<br/>• Menyimak penjelasan orang lain dengan penuh perhatian.</td>
-          <td style="border: 1pt solid #cbd5e1; padding: 6pt; text-align: center; font-size: 8.5pt;">3 = 3 aspek terpenuhi<br/>2 = 2 aspek terpenuhi<br/>1 = 1 aspek terpenuhi</td>
-        </tr>
+        ${rubrikSikapTableRows}
       </tbody>
     </table>
   </div>

@@ -61,11 +61,21 @@ app.post("/api/generate-module", async (req, res) => {
       namaKepsek,
       nipKepsek,
       kota,
+      tanggal,
       catatanTambahan,
       capaianPembelajaran,
       tujuanPembelajaran,
       dimensiProfilLulusan,
     } = req.body;
+
+    const finalTanggal =
+      tanggal && typeof tanggal === "string" && tanggal.trim()
+        ? tanggal.trim()
+        : new Date().toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
 
     let targetPertemuan = Number(jumlahPertemuan) || 1;
     if (!jumlahPertemuan && alokasiWaktu) {
@@ -173,7 +183,7 @@ Mengetahui,
 (${namaKepsek || "Nama Kepala Sekolah"})  
 NIP. ${nipKepsek || "NIP. ........................."}  
 
-${kota || "Jakarta"}, ${new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}  
+${kota || "Jakarta"}, ${finalTanggal}  
 **Guru Kelas / Mata Pelajaran**  
 (${namaGuru || "Nama Guru"})  
 NIP. ${nipGuru || "NIP. ........................."}  
@@ -196,15 +206,12 @@ NIP. ${nipGuru || "NIP. ........................."}
 **Mata Pelajaran** : ${mataPelajaran}  
 **Materi** : ${materiPelajaran}  
 
+*(MANDATORI SINKRONISASI: Tabel pengamatan sikap berikut WAJIB HANYA memuat Aspek Pengamatan dari Dimensi Profil Lulusan yang DIPILIH oleh guru pada form input. JANGAN memasukkan dimensi yang tidak dicentang/tidak dipilih guru!).*
+
 | No | Aspek Pengamatan | Kriteria Indikator | Skor |
 | :--- | :--- | :--- | :--- |
-| 1 | Keimanan dan Ketaqwaan | • Berdoa sebelum & sesudah kegiatan.<br>• Khusyuk dan bersikap baik. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 2 | Kewargaan | • Peduli & menghargai teman.<br>• Menggunakan bahasa santun. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 3 | Penalaran Kritis | • Mampu mengidentifikasi & menganalisis masalah.<br>• Reflektif dalam memecahkan tugas. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 4 | Kreativitas | • Mampu membuat ide/karya unik.<br>• Antusias menyelesaikan tantangan. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 5 | Kolaborasi | • Aktif bekerja sama dalam tim.<br>• Membantu teman yang kesulitan. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 6 | Kemandirian | • Mengelola waktu pengerjaan tugas.<br>• Percaya diri menyampaikan pendapat. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 7 | Komunikasi | • Menyampaikan argumen dengan santun.<br>• Menyajikan hasil diskusi dengan jelas. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
+| 1 | [Dimensi Terpilih 1] | • [Indikator perilaku konkret saat belajar ${materiPelajaran}]<br>• [Sikap santun/tanggung jawab/kritis terkait materi] | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
+| 2 | [Dimensi Terpilih 2] | • [Indikator perilaku konkret saat belajar ${materiPelajaran}]<br>• [Sikap kolaboratif/kreatif/mandiri terkait materi] | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
 
 ### 4. PENILAIAN PENGETAHUAN (ASESMEN SUMATIF)
 | No | Indikator Soal | Soal | Level Kognitif | Jenis Soal | Skor |
@@ -271,11 +278,11 @@ NIP. ${nipGuru || "NIP. ........................."}
 - Satuan Pendidikan: ${namaSekolah || "SD Negeri Percontohan"}
 - Guru: ${namaGuru || "Guru Penggerak"} (NIP: ${nipGuru || "-"})
 - Kepala Sekolah: ${namaKepsek || "Kepala Sekolah"} (NIP: ${nipKepsek || "-"})
-- Kota: ${kota || "Jakarta"}
+- Kota & Penanggalan Dokumen: ${kota || "Jakarta"}, ${finalTanggal}
 ${catatanTambahan ? `- Catatan Khusus / Diferensiasi: ${catatanTambahan}` : ""}
 ${capaianPembelajaran && capaianPembelajaran.trim() ? `- Capaian Pembelajaran (CP) Yang Diinginkan Guru: "${capaianPembelajaran.trim()}". (PENTING: Gunakan rumusan CP ini secara presisi pada bagian ## B. DESAIN PEMBELAJARAN -> Capaian Pembelajaran).` : ""}
 ${tujuanPembelajaran && tujuanPembelajaran.trim() ? `- Tujuan Pembelajaran (TP) Yang Diinginkan Guru: "${tujuanPembelajaran.trim()}". (PENTING: Gunakan rumusan TP ini secara presisi pada bagian ## B. DESAIN PEMBELAJARAN -> Tujuan Pembelajaran dan selaraskan sintak kegiatan serta asesmen dengannya).` : ""}
-${Array.isArray(dimensiProfilLulusan) ? `- Dimensi Profil Lulusan Pilihan Guru: ${dimensiProfilLulusan.length > 0 ? dimensiProfilLulusan.join(", ") : "Tidak ada dimensi khusus yang dipilih"}. (MANDATORI: Di bagian ## A. IDENTIFIKASI -> Dimensi Profil Lulusan, HANYA tuliskan dimensi yang tertera ini dengan tanda [✓]. JANGAN menuliskan dimensi yang TIDAK dipilih guru!).` : ""}
+${Array.isArray(dimensiProfilLulusan) ? `- Dimensi Profil Lulusan Pilihan Guru: ${dimensiProfilLulusan.length > 0 ? dimensiProfilLulusan.join(", ") : "Tidak ada dimensi khusus yang dipilih"}. (MANDATORI SINKRONISASI: Baik pada bagian "## A. IDENTIFIKASI -> Dimensi Profil Lulusan" maupun pada "### 3. PENILAIAN SIKAP (LEMBAR OBSERVASI DIMENSI PROFIL LULUSAN)", Anda WAJIB HANYA mencantumkan dimensi yang dipilih ini! Dimensi yang tidak dicentang/tidak dipilih guru DILARANG dimasukkan ke tabel penilaian sikap!).` : ""}
 
 Pastikan output adalah Markdown utuh yang siap pakai, mematuhi semua tabel, tanpa terpotong!`;
 
@@ -362,7 +369,11 @@ Pastikan output adalah Markdown utuh yang siap pakai, mematuhi semua tabel, tanp
         namaKepsek,
         nipKepsek,
         kota,
+        tanggal: finalTanggal,
         catatanTambahan,
+        capaianPembelajaran,
+        tujuanPembelajaran,
+        dimensiProfilLulusan,
       });
 
       generatedMarkdown = generateModuleMarkdown(fallbackModule);

@@ -22,7 +22,7 @@ export const QuickOutline: React.FC<QuickOutlineProps> = ({ onScrollTo }) => {
     { id: "section-asesmen", label: "D. Asesmen Pembelajaran", icon: CheckCircle2 },
     { id: "section-lampiran-1", label: "Lampiran 1: Materi Ajar", icon: BookOpen },
     { id: "section-lampiran-2", label: "Lampiran 2: LKPD / LKM", icon: ClipboardList },
-    { id: "section-lampiran-3", label: "Lampiran 3: Rubrik Sikap 7 Dimensi", icon: FileCheck },
+    { id: "section-lampiran-3", label: "Lampiran 3: Rubrik Observasi Sikap", icon: FileCheck },
     { id: "section-lampiran-4", label: "Lampiran 4: Soal Evaluasi (30 Poin)", icon: Sparkles },
     { id: "section-lampiran-5", label: "Lampiran 5: Penilaian Keterampilan", icon: Table },
   ];

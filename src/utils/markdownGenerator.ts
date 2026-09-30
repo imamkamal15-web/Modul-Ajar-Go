@@ -1,4 +1,5 @@
 import { DeepLearningModule } from "../types";
+import { getRubrikDimensi } from "./generatorEngine";
 
 export function generateModuleMarkdown(module: DeepLearningModule): string {
   // Checklist for Dimensi Profil Lulusan (only include checked dimensions)
@@ -9,6 +10,18 @@ export function generateModuleMarkdown(module: DeepLearningModule): string {
           .map((d) => `  - [✓] **${d.label}**${d.penjelasan ? `: ${d.penjelasan}` : ""}`)
           .join("\n")
       : "  *(Tidak ada dimensi khusus yang dipilih)*";
+
+  const rubrikSikapMdRows =
+    activeDimensi.length > 0
+      ? activeDimensi
+          .map((d, i) => {
+            const rubrik = getRubrikDimensi(d);
+            const ind = rubrik.indikator.replace(/\n/g, "<br>");
+            const skr = rubrik.skor.replace(/\n/g, "<br>");
+            return `| ${i + 1} | ${d.label} | ${ind} | ${skr} |`;
+          })
+          .join("\n")
+      : "| 1 | Sikap Umum & Karakter | • Disiplin dalam kesepakatan belajar kelas.<br>• Tanggung jawab menyelesaikan tugas hingga tuntas.<br>• Santun terhadap guru dan teman. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |";
 
   // Format Pendahuluan lines
   const pendahuluanText = module.deskripsiPendahuluan
@@ -191,13 +204,7 @@ ${refleksiLkpd}
 
 | No | Aspek Pengamatan | Kriteria Indikator | Skor |
 | :--- | :--- | :--- | :--- |
-| 1 | Keimanan dan Ketaqwaan | • Berdoa sebelum & sesudah kegiatan.<br>• Khusyuk dan bersikap baik. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 2 | Kewargaan | • Peduli & menghargai teman.<br>• Menggunakan bahasa santun. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 3 | Penalaran Kritis | • Mampu mengidentifikasi & menganalisis masalah.<br>• Reflektif dalam memecahkan tugas. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 4 | Kreativitas | • Mampu membuat ide/karya unik.<br>• Antusias menyelesaikan tantangan. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 5 | Kolaborasi | • Aktif bekerja sama dalam tim.<br>• Membantu teman yang kesulitan. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 6 | Kemandirian | • Mengelola waktu pengerjaan tugas.<br>• Percaya diri menyampaikan pendapat. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
-| 7 | Komunikasi | • Menyampaikan argumen dengan santun.<br>• Menyajikan hasil diskusi dengan jelas. | 3 = 3 aspek<br>2 = 2 aspek<br>1 = 1 aspek |
+${rubrikSikapMdRows}
 
 ---
 

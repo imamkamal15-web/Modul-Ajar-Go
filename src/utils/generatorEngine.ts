@@ -17,6 +17,7 @@ export interface GenerateFormValues {
   namaKepsek: string;
   nipKepsek: string;
   kota: string;
+  tanggal?: string;
   catatanTambahan?: string;
   capaianPembelajaran?: string;
   tujuanPembelajaran?: string;
@@ -67,6 +68,92 @@ export const STANDARD_PROFIL_DIMENSI = [
     deskripsiDefault: "Menumbuhkan kepedulian terhadap kelestarian lingkungan dan kebermanfaatan bagi masyarakat sekitar.",
   },
 ];
+
+export const RUBRIK_DIMENSI_STANDAR: Record<string, { label: string; indikator: string; skor: string }> = {
+  "keimanan-ketaqwaan": {
+    label: "Keimanan dan Ketaqwaan",
+    indikator: "• Berdoa sebelum & sesudah kegiatan pembelajaran dengan khusyuk.\n• Menunjukkan sikap santun, jujur, dan berakhlak mulia kepada guru dan sesama teman.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+  "kewargaan": {
+    label: "Kewargaan",
+    indikator: "• Menghargai keragaman teman sebaya dan berempati sosial.\n• Menggunakan bahasa santun dan menaati kesepakatan belajar kelas.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+  "penalaran-kritis": {
+    label: "Penalaran Kritis",
+    indikator: "• Mampu mengidentifikasi fakta, bukti kontekstual, dan menganalisis masalah.\n• Mengajukan pertanyaan kritis dan berpikir reflektif dalam pemecahan tugas.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+  "kreativitas": {
+    label: "Kreativitas",
+    indikator: "• Menyajikan gagasan orisinal dan solusi alternatif yang variatif.\n• Menunjukkan antusiasme tinggi dalam merancang produk/karya nyata.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+  "kolaborasi": {
+    label: "Kolaborasi",
+    indikator: "• Berbagi peran secara adil dan aktif berpartisipasi dalam diskusi tim.\n• Membantu rekan kelompok yang mengalami kesulitan dengan penuh kepedulian.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+  "kemandirian": {
+    label: "Kemandirian",
+    indikator: "• Mampu mengelola waktu, fokus belajar, dan menuntaskan tugas mandiri.\n• Percaya diri mengambil inisiatif tanpa bergantung penuh pada orang lain.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+  "komunikasi": {
+    label: "Komunikasi",
+    indikator: "• Menyampaikan pendapat atau hasil karya secara runut, artikulatif, dan santun.\n• Menyimak penjelasan orang lain dan memberikan tanggapan konstruktif.",
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  },
+};
+
+export function getRubrikDimensi(dim: { key?: string; label?: string } | string): { label: string; indikator: string; skor: string } {
+  const rawKey = typeof dim === "string" ? dim : (dim.key || dim.label || "");
+  const normalizedKey = rawKey.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  const label = typeof dim === "string" ? dim : (dim.label || dim.key || "Dimensi Karakter");
+
+  for (const [k, val] of Object.entries(RUBRIK_DIMENSI_STANDAR)) {
+    if (normalizedKey.includes(k) || k.includes(normalizedKey)) {
+      return { label: val.label || label, indikator: val.indikator, skor: val.skor };
+    }
+  }
+
+  const lowerLabel = label.toLowerCase();
+  if (lowerLabel.includes("iman") || lowerLabel.includes("taqwa") || lowerLabel.includes("takwa") || lowerLabel.includes("akhlak")) {
+    const std = RUBRIK_DIMENSI_STANDAR["keimanan-ketaqwaan"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+  if (lowerLabel.includes("kritis") || lowerLabel.includes("nalar")) {
+    const std = RUBRIK_DIMENSI_STANDAR["penalaran-kritis"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+  if (lowerLabel.includes("kreatif")) {
+    const std = RUBRIK_DIMENSI_STANDAR["kreativitas"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+  if (lowerLabel.includes("gotong") || lowerLabel.includes("kolaborasi") || lowerLabel.includes("kerjasama")) {
+    const std = RUBRIK_DIMENSI_STANDAR["kolaborasi"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+  if (lowerLabel.includes("mandiri")) {
+    const std = RUBRIK_DIMENSI_STANDAR["kemandirian"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+  if (lowerLabel.includes("komunikasi") || lowerLabel.includes("bicara")) {
+    const std = RUBRIK_DIMENSI_STANDAR["komunikasi"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+  if (lowerLabel.includes("warga") || lowerLabel.includes("kebhinekaan") || lowerLabel.includes("bhineka")) {
+    const std = RUBRIK_DIMENSI_STANDAR["kewargaan"];
+    return { label, indikator: std.indikator, skor: std.skor };
+  }
+
+  return {
+    label,
+    indikator: `• Menunjukkan konsistensi pengamalan nilai ${label} dalam proses pembelajaran.\n• Bersikap positif dan bertanggung jawab dalam kegiatan mandiri maupun kelompok.`,
+    skor: "3 = Memenuhi 3 aspek\n2 = Memenuhi 2 aspek\n1 = Memenuhi 1 aspek",
+  };
+}
 
 export function suggestCpAndTp(mapel: string, fase: string, materi: string) {
   const m = materi.trim() || "Materi Pelajaran";
@@ -262,6 +349,23 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
     });
   }
 
+  const mappedDimensi = STANDARD_PROFIL_DIMENSI.map((std) => {
+    const isSelected = Array.isArray(form.dimensiProfilLulusan)
+      ? form.dimensiProfilLulusan.includes(std.key) || form.dimensiProfilLulusan.includes(std.label)
+      : true;
+    return {
+      key: std.key,
+      label: std.label,
+      checked: isSelected,
+      penjelasan: `${std.deskripsiDefault} (Konteks materi: ${materi}).`,
+    };
+  });
+  const activeSelected = mappedDimensi.filter((d) => d.checked);
+  const activeDimNames = activeSelected.map((d) => d.label).join(", ");
+  const calculatedAsesmenFormatifSikap = activeSelected.length > 0
+    ? `Jurnal Observasi Dimensi Profil Lulusan (${activeDimNames}) selama kegiatan belajar berlangsung.`
+    : "Jurnal Observasi Sikap dan Keaktifan Murid selama kegiatan belajar berlangsung.";
+
   return {
     id: `custom-${Date.now()}`,
     tahunAjaran: form.tahunAjaran || "2024/2025",
@@ -281,7 +385,7 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
     namaGuru: form.namaGuru || "Imam Kamaluddin, S.Pd., Gr.",
     nipGuru: form.nipGuru || "19890821 201502 1 002",
     kota: form.kota || "Jakarta",
-    tanggal: new Date().toLocaleDateString("id-ID", {
+    tanggal: form.tanggal?.trim() || new Date().toLocaleDateString("id-ID", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -291,17 +395,7 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
 
     karakteristikMateriPelajaran: `Materi "${materi}" memiliki keterkaitan erat dengan kehidupan nyata murid sehingga sangat potensial disajikan secara kontekstual dan menggembirakan. Melalui pendekatan Deep Learning, murid diajak mengalami langsung fenomena, membedah studi kasus nyata, dan melakukan refleksi sadar (mindful reflection) sehingga materi tidak sekadar dihafal, melainkan diinternalisasi secara bermakna.`,
 
-    dimensiProfilLulusan: STANDARD_PROFIL_DIMENSI.map((std) => {
-      const isSelected = Array.isArray(form.dimensiProfilLulusan)
-        ? form.dimensiProfilLulusan.includes(std.key) || form.dimensiProfilLulusan.includes(std.label)
-        : true;
-      return {
-        key: std.key,
-        label: std.label,
-        checked: isSelected,
-        penjelasan: `${std.deskripsiDefault} (Konteks materi: ${materi}).`,
-      };
-    }),
+    dimensiProfilLulusan: mappedDimensi,
 
     capaianPembelajaran: form.capaianPembelajaran?.trim()
       ? form.capaianPembelajaran.trim()
@@ -377,7 +471,7 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
       "Doa Penutup penuh rasa syukur dan salam hangat.",
     ],
 
-    asesmenFormatifSikap: "Jurnal Observasi 7 Dimensi Profil Lulusan selama kegiatan belajar berlangsung.",
+    asesmenFormatifSikap: calculatedAsesmenFormatifSikap,
     asesmenFormatifKeterampilan: `Penilaian unjuk kerja pemecahan masalah pada materi ${materi}, keakuratan pengisian LKPD, dan kemampuan presentasi kelompok.`,
     asesmenSumatifDeskripsi: "Tes tertulis / kuis objektif dan penalaran HOTs sebanyak 5 butir soal (skor total 30, konversi skala 0-100).",
 

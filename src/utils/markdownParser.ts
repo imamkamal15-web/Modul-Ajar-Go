@@ -225,6 +225,10 @@ export function parseMarkdownToModule(
         base.lkpd.judul = (judulMatch[1] || judulMatch[2]).replace(/^[#*\s]+|[#*\s]+$/g, "");
       }
     }
+    // Ensure user-specified titimangsa tanggal is strictly preserved
+    if (formDefaults.tanggal?.trim()) {
+      base.tanggal = formDefaults.tanggal.trim();
+    }
   } catch (err) {
     console.warn("Markdown parsing warning:", err);
   }
