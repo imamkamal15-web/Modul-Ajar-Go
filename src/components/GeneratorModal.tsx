@@ -41,7 +41,7 @@ const TOPIC_SUGGESTIONS = [
     jenjang: "SD",
     kelas: "Kelas 4",
     fase: "Fase B",
-    model: "Problem Based Learning (PBL) dipadu Gamifikasi",
+    model: "Problem Based Learning (PBL)",
     cp: "Pada akhir Fase B, peserta didik menganalisis hubungan antara kebutuhan tumbuhan untuk fotosintesis (cahaya, air, klorofil, karbon dioksida) dan kaitannya dengan kelangsungan hidup makhluk hidup di bumi.",
     tp: "1. Murid mampu menganalisis proses fotosintesis tumbuhan dan zat yang dihasilkan melalui investigasi terpandu.\n2. Murid mampu menyajikan laporan skema fotosintesis dan rantai makanan secara kreatif dan kolaboratif.",
     dimensi: ["penalaran-kritis", "kreativitas", "kolaborasi", "keimanan-ketaqwaan"],
@@ -117,7 +117,7 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
     materiPelajaran: "Fotosintesis: Proses Tumbuhan Menghasilkan Makanan dan Oksigen",
     alokasiWaktu: "2 x 35 Menit (1 Pertemuan)",
     jumlahPertemuan: 1,
-    modelPembelajaran: "Problem Based Learning (PBL) dipadu Gamifikasi",
+    modelPembelajaran: "Problem Based Learning (PBL)",
     tahunAjaran: "2024/2025",
     namaSekolah: "SD Negeri Merdeka Belajar",
     namaGuru: "Imam Kamaluddin, S.Pd., Gr.",
@@ -414,8 +414,8 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
                   onChange={(e) => setForm({ ...form, modelPembelajaran: e.target.value })}
                   className="w-full px-2.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
                 >
-                  <option value="Problem Based Learning (PBL) dipadu Gamifikasi">
-                    PBL + Gamifikasi
+                  <option value="Problem Based Learning (PBL)">
+                    Problem Based Learning (PBL)
                   </option>
                   <option value="Project Based Learning (PjBL)">
                     Project Based Learning (PjBL)

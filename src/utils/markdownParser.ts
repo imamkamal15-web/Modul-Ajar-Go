@@ -110,7 +110,11 @@ export function parseMarkdownToModule(
             penjelasan: explanation || item.penjelasan,
           };
         }
-        return item;
+        // If not listed in markdown block at all, mark as unchecked
+        return {
+          ...item,
+          checked: false,
+        };
       });
       base.dimensiProfilLulusan = updatedDimensi;
     }

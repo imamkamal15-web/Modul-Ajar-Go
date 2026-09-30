@@ -215,61 +215,59 @@ export function exportToWordDoc(module: DeepLearningModule) {
     `;
   }
 
-  // Dimension Profil Cards (2 columns)
-  const dimensiCardsHtml = `
+  // Dimension Profil Cards (ONLY CHECKED DIMENSIONS)
+  const activeDimensi = module.dimensiProfilLulusan.filter((d) => d.checked);
+  const mid = Math.ceil(activeDimensi.length / 2);
+  const col1 = activeDimensi.slice(0, mid);
+  const col2 = activeDimensi.slice(mid);
+
+  const dimensiCardsHtml =
+    activeDimensi.length > 0
+      ? `
     <table style="width: 100%; border-collapse: collapse; margin-top: 6pt;">
       <tr>
         <td style="width: 50%; border: none; padding: 0 4pt 6pt 0; vertical-align: top;">
-          ${module.dimensiProfilLulusan
-            .slice(0, 4)
+          ${col1
             .map(
               (dim) => `
-            <div style="background-color: ${dim.checked ? "#f0fdf4" : "#f8fafc"}; border: 1pt solid ${dim.checked ? "#bbf7d0" : "#e2e8f0"}; border-radius: 6pt; padding: 6pt 8pt; margin-bottom: 6pt;">
-              <table style="width: 100%; border: none; margin: 0;">
-                <tr>
-                  <td style="width: 18pt; border: none; padding: 0; vertical-align: top;">
-                    <span style="display: inline-block; width: 14pt; height: 14pt; line-height: 14pt; text-align: center; border-radius: 3pt; background-color: ${dim.checked ? "#059669" : "#cbd5e1"}; color: #ffffff; font-size: 9pt; font-weight: bold;">
-                      ${dim.checked ? "✓" : ""}
-                    </span>
-                  </td>
-                  <td style="border: none; padding-left: 6pt; vertical-align: top;">
-                    <div style="font-weight: bold; font-size: 10pt; color: #0f172a;">${dim.label}</div>
-                    <div style="font-size: 9pt; color: #475569; line-height: 1.4; margin-top: 2pt;">${dim.penjelasan}</div>
-                  </td>
-                </tr>
-              </table>
-            </div>
+            <table style="width: 100%; border: 1pt solid #bbf7d0; background-color: #f0fdf4; margin-bottom: 6pt; border-collapse: collapse;">
+              <tr>
+                <td style="width: 22pt; border: none; padding: 6pt 2pt 6pt 8pt; vertical-align: top;">
+                  <span style="font-weight: bold; color: #059669; font-size: 11pt;">[✓]</span>
+                </td>
+                <td style="border: none; padding: 6pt 8pt 6pt 2pt; vertical-align: top;">
+                  <div style="font-weight: bold; font-size: 10pt; color: #065f46;">${dim.label}</div>
+                  <div style="font-size: 9pt; color: #334155; line-height: 1.4; margin-top: 2pt;">${dim.penjelasan}</div>
+                </td>
+              </tr>
+            </table>
           `
             )
             .join("")}
         </td>
         <td style="width: 50%; border: none; padding: 0 0 6pt 4pt; vertical-align: top;">
-          ${module.dimensiProfilLulusan
-            .slice(4)
+          ${col2
             .map(
               (dim) => `
-            <div style="background-color: ${dim.checked ? "#f0fdf4" : "#f8fafc"}; border: 1pt solid ${dim.checked ? "#bbf7d0" : "#e2e8f0"}; border-radius: 6pt; padding: 6pt 8pt; margin-bottom: 6pt;">
-              <table style="width: 100%; border: none; margin: 0;">
-                <tr>
-                  <td style="width: 18pt; border: none; padding: 0; vertical-align: top;">
-                    <span style="display: inline-block; width: 14pt; height: 14pt; line-height: 14pt; text-align: center; border-radius: 3pt; background-color: ${dim.checked ? "#059669" : "#cbd5e1"}; color: #ffffff; font-size: 9pt; font-weight: bold;">
-                      ${dim.checked ? "✓" : ""}
-                    </span>
-                  </td>
-                  <td style="border: none; padding-left: 6pt; vertical-align: top;">
-                    <div style="font-weight: bold; font-size: 10pt; color: #0f172a;">${dim.label}</div>
-                    <div style="font-size: 9pt; color: #475569; line-height: 1.4; margin-top: 2pt;">${dim.penjelasan}</div>
-                  </td>
-                </tr>
-              </table>
-            </div>
+            <table style="width: 100%; border: 1pt solid #bbf7d0; background-color: #f0fdf4; margin-bottom: 6pt; border-collapse: collapse;">
+              <tr>
+                <td style="width: 22pt; border: none; padding: 6pt 2pt 6pt 8pt; vertical-align: top;">
+                  <span style="font-weight: bold; color: #059669; font-size: 11pt;">[✓]</span>
+                </td>
+                <td style="border: none; padding: 6pt 8pt 6pt 2pt; vertical-align: top;">
+                  <div style="font-weight: bold; font-size: 10pt; color: #065f46;">${dim.label}</div>
+                  <div style="font-size: 9pt; color: #334155; line-height: 1.4; margin-top: 2pt;">${dim.penjelasan}</div>
+                </td>
+              </tr>
+            </table>
           `
             )
             .join("")}
         </td>
       </tr>
     </table>
-  `;
+  `
+      : `<div style="font-size: 10pt; color: #64748b; font-style: italic; margin-top: 4pt; border-left: 2pt solid #cbd5e1; padding-left: 6pt;">Tidak ada dimensi khusus yang dipilih.</div>`;
 
   // Create complete official HTML document
   const htmlContent = `
@@ -427,57 +425,99 @@ export function exportToWordDoc(module: DeepLearningModule) {
         ${module.tujuanPembelajaran}
       </div>
 
-      <!-- 3 Structured Cards for Pedagogis, Lingkungan, Digital -->
-      <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
+      <!-- Praktik Pedagogis, Lingkungan & Kemitraan, Pemanfaatan Digital -->
+      <table style="width: 100%; border-collapse: collapse; margin-top: 8pt; margin-bottom: 8pt;">
+        <tr style="background-color: #f1f5f9;">
+          <th colspan="2" style="border: 1pt solid #94a3b8; padding: 6pt 10pt; text-align: left; font-size: 10pt; font-weight: bold; color: #065f46; text-transform: uppercase;">
+            1. Praktik Pedagogis
+          </th>
+        </tr>
         <tr>
-          <td style="width: 50%; border: none; padding: 0 4pt 8pt 0; vertical-align: top;">
-            <div style="background-color: #f8fafc; border: 1pt solid #cbd5e1; border-radius: 6pt; padding: 8pt 10pt;">
-              <div style="font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #065f46; letter-spacing: 0.5pt; margin-bottom: 4pt;">
-                Praktik Pedagogis
-              </div>
-              <ul style="margin: 0; padding-left: 12pt; font-size: 9.5pt; color: #334155; line-height: 1.45;">
-                <li><strong>Pendekatan:</strong> ${module.pendekatanPembelajaran}</li>
-                <li><strong>Model:</strong> ${module.modelPembelajaran}</li>
-                <li><strong>Metode:</strong> ${module.metodePembelajaran}</li>
-              </ul>
-            </div>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Pendekatan Pembelajaran
           </td>
-          <td style="width: 50%; border: none; padding: 0 0 8pt 4pt; vertical-align: top;">
-            <div style="background-color: #f8fafc; border: 1pt solid #cbd5e1; border-radius: 6pt; padding: 8pt 10pt;">
-              <div style="font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #065f46; letter-spacing: 0.5pt; margin-bottom: 4pt;">
-                Lingkungan & Kemitraan
-              </div>
-              <ul style="margin: 0; padding-left: 12pt; font-size: 9.5pt; color: #334155; line-height: 1.45;">
-                <li><strong>Budaya Belajar:</strong> ${module.budayaBelajar}</li>
-                <li><strong>Ruang Fisik:</strong> ${module.ruangFisik}</li>
-                <li><strong>Kemitraan Murid:</strong> ${module.kemitraanMurid}</li>
-              </ul>
-            </div>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.pendekatanPembelajaran}
           </td>
         </tr>
         <tr>
-          <td colspan="2" style="border: none; padding: 4pt 0 0 0;">
-            <div style="background-color: #f8fafc; border: 1pt solid #cbd5e1; border-radius: 6pt; padding: 8pt 10pt;">
-              <div style="font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #065f46; letter-spacing: 0.5pt; margin-bottom: 4pt;">
-                Pemanfaatan Digital & Media
-              </div>
-              <table style="width: 100%; border: none; margin: 0; font-size: 9.5pt;">
-                <tr>
-                  <td style="width: 33%; border: none; padding: 2pt 4pt 2pt 0; vertical-align: top;">
-                    <strong style="color: #0f172a; display: block;">Platform Desain / Digital:</strong>
-                    <span style="color: #334155;">${module.platformDigital}</span>
-                  </td>
-                  <td style="width: 33%; border: none; padding: 2pt 4pt 2pt 4pt; vertical-align: top;">
-                    <strong style="color: #0f172a; display: block;">Perangkat:</strong>
-                    <span style="color: #334155;">${module.perangkat}</span>
-                  </td>
-                  <td style="width: 34%; border: none; padding: 2pt 0 2pt 4pt; vertical-align: top;">
-                    <strong style="color: #0f172a; display: block;">Media & Bahan Ajar:</strong>
-                    <span style="color: #334155;">${module.mediaPembelajaran}</span>
-                  </td>
-                </tr>
-              </table>
-            </div>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Model Pembelajaran
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.modelPembelajaran}
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Metode Pembelajaran
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.metodePembelajaran}
+          </td>
+        </tr>
+      </table>
+
+      <table style="width: 100%; border-collapse: collapse; margin-top: 8pt; margin-bottom: 8pt;">
+        <tr style="background-color: #f1f5f9;">
+          <th colspan="2" style="border: 1pt solid #94a3b8; padding: 6pt 10pt; text-align: left; font-size: 10pt; font-weight: bold; color: #065f46; text-transform: uppercase;">
+            2. Lingkungan Pembelajaran & Kemitraan
+          </th>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Budaya Belajar
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.budayaBelajar}
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Ruang Fisik
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.ruangFisik}
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Kemitraan Antarmurid
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.kemitraanMurid}
+          </td>
+        </tr>
+      </table>
+
+      <table style="width: 100%; border-collapse: collapse; margin-top: 8pt; margin-bottom: 8pt;">
+        <tr style="background-color: #f1f5f9;">
+          <th colspan="2" style="border: 1pt solid #94a3b8; padding: 6pt 10pt; text-align: left; font-size: 10pt; font-weight: bold; color: #065f46; text-transform: uppercase;">
+            3. Pemanfaatan Digital & Media Pembelajaran
+          </th>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Platform Desain / Digital
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.platformDigital}
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Perangkat
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.perangkat}
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 28%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; font-weight: bold; color: #1e293b; font-size: 9.5pt; background-color: #f8fafc;">
+            Media & Bahan Ajar
+          </td>
+          <td style="width: 72%; border: 1pt solid #cbd5e1; padding: 6pt 10pt; color: #334155; font-size: 9.5pt;">
+            ${module.mediaPembelajaran}
           </td>
         </tr>
       </table>
@@ -540,8 +580,11 @@ export function exportToWordDoc(module: DeepLearningModule) {
     </tr>
   </table>
 
-  <!-- PAGE BREAK TO LAMPIRAN -->
-  <div class="page-break" style="page-break-before: always; mso-break-type: page-break;"></div>
+  <!-- HARD PAGE BREAK TO LAMPIRAN (NATIVE WORD MSO BREAK) -->
+  <br clear="all" style="page-break-before: always; mso-break-type: section-break;" />
+  <div style="page-break-before: always; mso-break-type: section-break;">
+    <p style="page-break-before: always; mso-break-type: section-break; margin: 0; padding: 0; line-height: 1pt; font-size: 1pt;">&nbsp;</p>
+  </div>
 
   <!-- LAMPIRAN-LAMPIRAN HEADER -->
   <div style="text-align: center; margin-top: 10pt; margin-bottom: 16pt; padding-bottom: 10pt; border-bottom: 2pt solid #e2e8f0;">

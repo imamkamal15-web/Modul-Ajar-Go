@@ -95,7 +95,7 @@ export function suggestCpAndTp(mapel: string, fase: string, materi: string) {
 export function buildFallbackModule(form: GenerateFormValues): DeepLearningModule {
   const mapel = form.mataPelajaran || "Ilmu Pengetahuan Alam dan Sosial (IPAS)";
   const materi = form.materiPelajaran || "Eksplorasi Kontekstual";
-  const model = form.modelPembelajaran || "Problem Based Learning (PBL) berpadu Gamifikasi";
+  const model = form.modelPembelajaran || "Problem Based Learning (PBL)";
   const kelas = form.kelas || "Kelas 4";
   const fase = form.fase || "Fase B";
   const semester = form.semester || "Semester 1";
@@ -292,7 +292,7 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
     karakteristikMateriPelajaran: `Materi "${materi}" memiliki keterkaitan erat dengan kehidupan nyata murid sehingga sangat potensial disajikan secara kontekstual dan menggembirakan. Melalui pendekatan Deep Learning, murid diajak mengalami langsung fenomena, membedah studi kasus nyata, dan melakukan refleksi sadar (mindful reflection) sehingga materi tidak sekadar dihafal, melainkan diinternalisasi secara bermakna.`,
 
     dimensiProfilLulusan: STANDARD_PROFIL_DIMENSI.map((std) => {
-      const isSelected = form.dimensiProfilLulusan && form.dimensiProfilLulusan.length > 0
+      const isSelected = Array.isArray(form.dimensiProfilLulusan)
         ? form.dimensiProfilLulusan.includes(std.key) || form.dimensiProfilLulusan.includes(std.label)
         : true;
       return {

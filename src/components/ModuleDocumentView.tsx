@@ -108,36 +108,34 @@ export const ModuleDocumentView: React.FC<ModuleDocumentViewProps> = ({ module }
             <span className="font-bold text-slate-900 block mb-2">
               • Dimensi Profil Lulusan:
             </span>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pl-2">
-              {module.dimensiProfilLulusan.map((dim) => (
-                <div
-                  key={dim.key}
-                  className={`p-2.5 rounded-lg border text-xs flex items-start gap-2.5 transition-colors ${
-                    dim.checked
-                      ? "bg-emerald-50/50 border-emerald-200 text-slate-800"
-                      : "bg-slate-50 border-slate-200 text-slate-400"
-                  }`}
-                >
-                  <div
-                    className={`mt-0.5 w-4 h-4 rounded-xs flex items-center justify-center shrink-0 ${
-                      dim.checked
-                        ? "bg-emerald-600 text-white"
-                        : "border border-slate-300 bg-white"
-                    }`}
-                  >
-                    {dim.checked && <Check className="w-3 h-3 stroke-[3]" />}
-                  </div>
-                  <div>
-                    <span className="font-bold text-slate-900">{dim.label}</span>
-                    {dim.penjelasan && (
-                      <p className="text-slate-600 text-[11px] mt-0.5 leading-snug">
-                        {dim.penjelasan}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {module.dimensiProfilLulusan.filter((d) => d.checked).length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pl-2">
+                {module.dimensiProfilLulusan
+                  .filter((d) => d.checked)
+                  .map((dim) => (
+                    <div
+                      key={dim.key}
+                      className="p-2.5 rounded-lg border text-xs flex items-start gap-2.5 transition-colors bg-emerald-50/50 border-emerald-200 text-slate-800"
+                    >
+                      <div className="mt-0.5 w-4 h-4 rounded-xs flex items-center justify-center shrink-0 bg-emerald-600 text-white">
+                        <Check className="w-3 h-3 stroke-[3]" />
+                      </div>
+                      <div>
+                        <span className="font-bold text-slate-900">{dim.label}</span>
+                        {dim.penjelasan && (
+                          <p className="text-slate-600 text-[11px] mt-0.5 leading-snug">
+                            {dim.penjelasan}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className="text-slate-500 text-xs italic pl-4 border-l-2 border-slate-200 py-1">
+                Tidak ada dimensi khusus yang dipilih.
+              </div>
+            )}
           </div>
         </div>
       </section>

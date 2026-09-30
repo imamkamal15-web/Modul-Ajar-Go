@@ -1,10 +1,14 @@
 import { DeepLearningModule } from "../types";
 
 export function generateModuleMarkdown(module: DeepLearningModule): string {
-  // Checklist for Dimensi Profil Lulusan
-  const dimensiText = module.dimensiProfilLulusan
-    .map((d) => `  - [${d.checked ? "✓" : " "}] **${d.label}**${d.penjelasan ? `: ${d.penjelasan}` : ""}`)
-    .join("\n");
+  // Checklist for Dimensi Profil Lulusan (only include checked dimensions)
+  const activeDimensi = module.dimensiProfilLulusan.filter((d) => d.checked);
+  const dimensiText =
+    activeDimensi.length > 0
+      ? activeDimensi
+          .map((d) => `  - [✓] **${d.label}**${d.penjelasan ? `: ${d.penjelasan}` : ""}`)
+          .join("\n")
+      : "  *(Tidak ada dimensi khusus yang dipilih)*";
 
   // Format Pendahuluan lines
   const pendahuluanText = module.deskripsiPendahuluan

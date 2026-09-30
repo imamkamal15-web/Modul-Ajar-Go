@@ -76,7 +76,7 @@ export const PRESET_MODULES: DeepLearningModule[] = [
     pendekatanPembelajaran:
       "Deep Learning (Bermakna, Berkesadaran, Menggembirakan), Experiential Learning dan Contextual Science Inquiry.",
     modelPembelajaran:
-      "Problem Based Learning (PBL) dipadukan dengan Gamifikasi Pos Eksplorasi Saintifik.",
+      "Problem Based Learning (PBL).",
     metodePembelajaran:
       "Investigasi eksperimen sederhana (Ingenhousz mini), diskusi kelompok berdiferensiasi, permainan peran molekul kimia, dan presentasi unjuk kerja.",
     budayaBelajar:
@@ -395,7 +395,7 @@ Tumbuhan berkedudukan sebagai **Produsen Primer**. Hewan herbivora memakan tumbu
     tujuanPembelajaran:
       "Melalui media manipulatif pecahan dan simulasi kontekstual 'Dapur Resep Nusantara', murid mampu menyelesaikan operasi penjumlahan dan pengurangan pecahan berpenyebut berbeda secara tepat dan bernalar minimal 80% benar.",
     pendekatanPembelajaran: "Deep Learning (Bermakna, Berkesadaran, Menggembirakan), Realistic Mathematics Education (RME).",
-    modelPembelajaran: "Problem Based Learning (PBL) berpadu Gamifikasi Matematika.",
+    modelPembelajaran: "Problem Based Learning (PBL) berbasis Manipulatif Visual.",
     metodePembelajaran: "Eksplorasi kertas lipat pecahan, tantangan pasar teka-teki, diskusi terbimbing, dan presentasi strategi hitung.",
     budayaBelajar: "Iklim belajar yang merayakan kesalahan sebagai sarana belajar ('Mistakes are proof that you are trying'), saling menghargai cara berpikir teman.",
     ruangFisik: "Ruang kelas ditata menjadi 4 Kedai Bahan Masakan Pecahan.",

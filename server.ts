@@ -117,8 +117,8 @@ STRUKTUR DOKUMEN WAJIB:
 * **Tujuan Pembelajaran:** (Tuliskan rumusan Tujuan Pembelajaran berbasis prinsip operasional ABCD secara tuntas tanpa tanda kurung siku [])
 * **Praktik Pedagogis:**
   * **Pendekatan Pembelajaran:** Deep Learning (Bermakna, Berkesadaran, Menggembirakan), Experiential Learning / Contextual Learning.
-  * **Model Pembelajaran:** ${modelPembelajaran || "Problem Based Learning (PBL) berpadu Gamifikasi"}
-  * **Metode Pembelajaran:** Permainan edukatif pemantik, investigasi pos/studi kasus, diskusi kolaboratif tim, dan presentasi unjuk karya.
+  * **Model Pembelajaran:** ${modelPembelajaran || "Problem Based Learning (PBL)"}
+  * **Metode Pembelajaran:** Diskusi kolaboratif kelompok, investigasi terbimbing/studi kasus, eksperimen hands-on, dan presentasi unjuk karya.
 * **Lingkungan Pembelajaran:**
   * **Budaya Belajar:** Eksplorasi aktif, saling menghargai pendapat, rasa ingin tahu tinggi, dan berani berekspresi tanpa takut salah.
   * **Ruang Fisik:** Ruang kelas dinamis dan fleksibel dengan pos belajar/sudut eksperimen serta area luar ruang.
@@ -267,7 +267,7 @@ NIP. ${nipGuru || "NIP. ........................."}
 - Tahun Ajaran: ${tahunAjaran || "2024/2025"}
 - Alokasi Waktu: ${alokasiWaktu || "2 x 35 Menit (1 Pertemuan)"}
 - Jumlah Pertemuan: ${targetPertemuan} Pertemuan (WAJIB sediakan ${targetPertemuan} sub-seksi pertemuan lengkap di Bagian C)
-- Model Pembelajaran: ${modelPembelajaran || "Problem Based Learning dipadu Gamifikasi Eksploratif"}
+- Model Pembelajaran: ${modelPembelajaran || "Problem Based Learning (PBL)"}
 - Satuan Pendidikan: ${namaSekolah || "SD Negeri Percontohan"}
 - Guru: ${namaGuru || "Guru Penggerak"} (NIP: ${nipGuru || "-"})
 - Kepala Sekolah: ${namaKepsek || "Kepala Sekolah"} (NIP: ${nipKepsek || "-"})
@@ -275,7 +275,7 @@ NIP. ${nipGuru || "NIP. ........................."}
 ${catatanTambahan ? `- Catatan Khusus / Diferensiasi: ${catatanTambahan}` : ""}
 ${capaianPembelajaran && capaianPembelajaran.trim() ? `- Capaian Pembelajaran (CP) Yang Diinginkan Guru: "${capaianPembelajaran.trim()}". (PENTING: Gunakan rumusan CP ini secara presisi pada bagian ## B. DESAIN PEMBELAJARAN -> Capaian Pembelajaran).` : ""}
 ${tujuanPembelajaran && tujuanPembelajaran.trim() ? `- Tujuan Pembelajaran (TP) Yang Diinginkan Guru: "${tujuanPembelajaran.trim()}". (PENTING: Gunakan rumusan TP ini secara presisi pada bagian ## B. DESAIN PEMBELAJARAN -> Tujuan Pembelajaran dan selaraskan sintak kegiatan serta asesmen dengannya).` : ""}
-${Array.isArray(dimensiProfilLulusan) && dimensiProfilLulusan.length > 0 ? `- Dimensi Profil Lulusan Pilihan Guru: ${dimensiProfilLulusan.join(", ")}. (PENTING: Berikan tanda centang [✓] khusus pada dimensi-dimensi ini di bagian ## A. IDENTIFIKASI -> Dimensi Profil Lulusan, dan sertakan uraian relevansinya).` : ""}
+${Array.isArray(dimensiProfilLulusan) ? `- Dimensi Profil Lulusan Pilihan Guru: ${dimensiProfilLulusan.length > 0 ? dimensiProfilLulusan.join(", ") : "Tidak ada dimensi khusus yang dipilih"}. (MANDATORI: Di bagian ## A. IDENTIFIKASI -> Dimensi Profil Lulusan, HANYA tuliskan dimensi yang tertera ini dengan tanda [✓]. JANGAN menuliskan dimensi yang TIDAK dipilih guru!).` : ""}
 
 Pastikan output adalah Markdown utuh yang siap pakai, mematuhi semua tabel, tanpa terpotong!`;
 
