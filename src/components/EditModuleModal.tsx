@@ -150,16 +150,107 @@ export const EditModuleModal: React.FC<EditModuleModalProps> = ({
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Tujuan Pembelajaran
-            </label>
-            <textarea
-              rows={3}
-              value={formData.tujuanPembelajaran}
-              onChange={(e) => setFormData({ ...formData, tujuanPembelajaran: e.target.value })}
-              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
-            />
+          <div className="space-y-3 border-t border-slate-200 pt-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              A. Identifikasi Pembelajaran
+            </h3>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Identifikasi Kesiapan Murid
+              </label>
+              <textarea
+                rows={2}
+                value={formData.kesiapanMurid}
+                onChange={(e) => setFormData({ ...formData, kesiapanMurid: e.target.value })}
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+                placeholder="Uraian kesiapan murid..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Karakteristik Materi Pelajaran
+              </label>
+              <textarea
+                rows={2}
+                value={formData.karakteristikMateriPelajaran}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    karakteristikMateriPelajaran: e.target.value,
+                    karakteristikMateri: e.target.value,
+                  })
+                }
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+                placeholder="Uraian karakteristik materi..."
+              />
+            </div>
+            {formData.dimensiProfilLulusan && formData.dimensiProfilLulusan.length > 0 && (
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Dimensi Profil Lulusan yang Disasar (Centang yang aktif)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  {formData.dimensiProfilLulusan.map((dim, idx) => (
+                    <label
+                      key={dim.key || idx}
+                      className={`flex items-start gap-2 p-2 rounded-md border cursor-pointer select-none transition-colors ${
+                        dim.checked
+                          ? "bg-emerald-50 border-emerald-300 text-slate-900"
+                          : "bg-white border-slate-200 text-slate-500 opacity-70 hover:opacity-100"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={dim.checked}
+                        onChange={(e) => {
+                          const updated = [...formData.dimensiProfilLulusan];
+                          updated[idx] = { ...updated[idx], checked: e.target.checked };
+                          setFormData({ ...formData, dimensiProfilLulusan: updated });
+                        }}
+                        className="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <div className="text-xs">
+                        <div className="font-semibold text-slate-900">{dim.label}</div>
+                        {dim.penjelasan && (
+                          <div className="text-[10px] text-slate-500 line-clamp-1">{dim.penjelasan}</div>
+                        )}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3 border-t border-slate-200 pt-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              B. Desain Pembelajaran
+            </h3>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Capaian Pembelajaran (CP)
+              </label>
+              <textarea
+                rows={2}
+                value={formData.capaianPembelajaran}
+                onChange={(e) => setFormData({ ...formData, capaianPembelajaran: e.target.value })}
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+                placeholder="Capaian Pembelajaran resmi..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Tujuan Pembelajaran (TP)
+              </label>
+              <textarea
+                rows={3}
+                value={formData.tujuanPembelajaran}
+                onChange={(e) => setFormData({ ...formData, tujuanPembelajaran: e.target.value })}
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+                placeholder="Rumusan prinsip ABCD..."
+              />
+            </div>
           </div>
 
           <div className="border-t border-slate-200 pt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">

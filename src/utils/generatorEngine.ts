@@ -18,6 +18,78 @@ export interface GenerateFormValues {
   nipKepsek: string;
   kota: string;
   catatanTambahan?: string;
+  capaianPembelajaran?: string;
+  tujuanPembelajaran?: string;
+  dimensiProfilLulusan?: string[];
+}
+
+export const STANDARD_PROFIL_DIMENSI = [
+  {
+    key: "keimanan-ketaqwaan",
+    label: "Keimanan dan Ketaqwaan",
+    sublabel: "Beriman, Bertakwa kepada Tuhan YME, & Berakhlak Mulia",
+    deskripsiDefault: "Mengawali dan mengakhiri kegiatan dengan doa khusyuk serta mensyukuri ilmu pengetahuan sebagai karunia Tuhan.",
+  },
+  {
+    key: "penalaran-kritis",
+    label: "Penalaran Kritis",
+    sublabel: "Menganalisis informasi, bukti konkret, & solusi masalah",
+    deskripsiDefault: "Menganalisis permasalahan kontekstual dan menemukan solusi berbasis data serta fakta empiris.",
+  },
+  {
+    key: "kreativitas",
+    label: "Kreativitas",
+    sublabel: "Gagasan orisinal, ide inovatif, & karya unjuk rasa",
+    deskripsiDefault: "Menghasilkan gagasan orisinal dan karya/produk unjuk belajar yang variatif dan solutif.",
+  },
+  {
+    key: "kolaborasi",
+    label: "Kolaborasi",
+    sublabel: "Gotong royong, kerja kelompok, & saling mendukung",
+    deskripsiDefault: "Bekerja sama secara aktif, peduli sesama, dan suportif dalam kelompok penyelidikan terarah.",
+  },
+  {
+    key: "kemandirian",
+    label: "Kemandirian",
+    sublabel: "Regulasi diri, tanggung jawab kerja, & rasa percaya diri",
+    deskripsiDefault: "Bertanggung jawab atas peran belajar, mengelola waktu secara berkesadaran, dan berinisiatif aktif.",
+  },
+  {
+    key: "komunikasi",
+    label: "Komunikasi",
+    sublabel: "Artikulasi gagasan santun, dialog kritis, & presentasi",
+    deskripsiDefault: "Menyampaikan hasil telaah dan refleksi dengan bahasa yang runtut, santun, dan komunikatif.",
+  },
+  {
+    key: "kewargaan",
+    label: "Kewargaan",
+    sublabel: "Kepedulian sosial, kebhinekaan global, & aksi lingkungan",
+    deskripsiDefault: "Menumbuhkan kepedulian terhadap kelestarian lingkungan dan kebermanfaatan bagi masyarakat sekitar.",
+  },
+];
+
+export function suggestCpAndTp(mapel: string, fase: string, materi: string) {
+  const m = materi.trim() || "Materi Pelajaran";
+  const f = fase.trim() || "Fase Terkait";
+  const mp = mapel.trim().toLowerCase();
+
+  let cp = `Pada akhir ${f}, peserta didik memiliki kemampuan memahami konsep inti dan keterkaitan materi "${m}" dengan fenomena sehari-hari, mampu melakukan penyelidikan ilmiah/kontekstual sederhana, serta mengomunikasikan gagasannya secara bernalar kritis, kreatif, dan mandiri sesuai karakteristik ${mapel}.`;
+  
+  if (mp.includes("ipas") || mp.includes("alam") || mp.includes("sosial")) {
+    cp = `Pada akhir ${f}, peserta didik menganalisis hubungan antara fenomena alam dan sosial yang berkaitan dengan "${m}". Peserta didik mengamati, menyelidiki faktor-faktor penyebab, dan merefleksikan peran manusia dalam menjaga keseimbangan alam dan kehidupan bermasyarakat.`;
+  } else if (mp.includes("matematika")) {
+    cp = `Pada akhir ${f}, peserta didik dapat menunjukkan pemahaman dan intuisi bilangan/aljabar/geometri yang berkaitan dengan "${m}", menyelesaikan masalah kontekstual yang melibatkan konsep tersebut, serta mengomunikasikan proses berpikir matematis secara runtut.`;
+  } else if (mp.includes("bahasa indonesia")) {
+    cp = `Pada akhir ${f}, peserta didik memiliki kemampuan berbahasa untuk berkomunikasi dan bernalar sesuai dengan tujuan dan konteks sosial materi "${m}". Peserta didik mampu memahami, mengolah, dan menginterpretasikan informasi teks/audiovisual serta memproduksi gagasan kreatif.`;
+  } else if (mp.includes("pancasila") || mp.includes("pkn")) {
+    cp = `Pada akhir ${f}, peserta didik mampu memahami makna dan menerapkan nilai-nilai luhur Pancasila dalam materi "${m}", membiasakan gotong royong, menghargai keberagaman, dan menunjukkan perilaku bertanggung jawab di lingkungan sekolah dan masyarakat.`;
+  }
+
+  const tp = `1. Melalui pengamatan fenomena dan stimulasi kontekstual, murid mampu mengidentifikasi dan menjelaskan konsep kunci "${m}" secara tepat dan mendalam (Memahami).
+2. Melalui investigasi kolaboratif dan pengerjaan LKPD tematik, murid mampu menganalisis permasalahan riil terkait "${m}" serta merumuskan alternatif solusi solutif (Mengaplikasi).
+3. Melalui unjuk karya dan diskusi kelas, murid mampu merefleksikan kebermanfaatan materi "${m}" dalam kehidupan nyata dengan penuh kesadaran dan tanggung jawab (Merefleksi).`;
+
+  return { cp, tp };
 }
 
 export function buildFallbackModule(form: GenerateFormValues): DeepLearningModule {
@@ -266,54 +338,25 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
 
     karakteristikMateriPelajaran: `Materi "${materi}" memiliki keterkaitan erat dengan kehidupan nyata murid sehingga sangat potensial disajikan secara kontekstual dan menggembirakan. Melalui pendekatan Deep Learning, murid diajak mengalami langsung fenomena, membedah studi kasus nyata, dan melakukan refleksi sadar (mindful reflection) sehingga materi tidak sekadar dihafal, melainkan diinternalisasi secara bermakna.`,
 
-    dimensiProfilLulusan: [
-      {
-        key: "penalaran-kritis",
-        label: "Penalaran Kritis",
-        checked: true,
-        penjelasan: `Menganalisis permasalahan kontekstual pada materi ${materi} dan menemukan solusi berbasis data/fakta.`,
-      },
-      {
-        key: "kreativitas",
-        label: "Kreativitas",
-        checked: true,
-        penjelasan: `Menghasilkan gagasan orisinal dan karya/produk presentasi yang variatif dan aplikatif.`,
-      },
-      {
-        key: "kolaborasi",
-        label: "Kolaborasi",
-        checked: true,
-        penjelasan: `Bekerja sama secara aktif dan suportif dalam kelompok investigasi dan diskusi terbimbing.`,
-      },
-      {
-        key: "kemandirian",
-        label: "Kemandirian",
-        checked: true,
-        penjelasan: `Bertanggung jawab atas peran kerja, mengelola waktu secara sadar, dan percaya diri mengemukakan ide.`,
-      },
-      {
-        key: "komunikasi",
-        label: "Komunikasi",
-        checked: true,
-        penjelasan: `Menyampaikan hasil telaah dan kesimpulan dengan bahasa yang runtut, santun, dan jelas.`,
-      },
-      {
-        key: "keimanan-ketaqwaan",
-        label: "Keimanan dan Ketaqwaan",
-        checked: true,
-        penjelasan: `Mengawali dan mengakhiri kegiatan dengan doa khusyuk serta mensyukuri ilmu pengetahuan sebagai karunia Tuhan.`,
-      },
-      {
-        key: "kewargaan",
-        label: "Kewargaan",
-        checked: true,
-        penjelasan: `Menumbuhkan kepedulian sosial, toleransi, dan aksi nyata bermanfaat bagi lingkungan sekitar.`,
-      },
-    ],
+    dimensiProfilLulusan: STANDARD_PROFIL_DIMENSI.map((std) => {
+      const isSelected = form.dimensiProfilLulusan && form.dimensiProfilLulusan.length > 0
+        ? form.dimensiProfilLulusan.includes(std.key) || form.dimensiProfilLulusan.includes(std.label)
+        : true;
+      return {
+        key: std.key,
+        label: std.label,
+        checked: isSelected,
+        penjelasan: `${std.deskripsiDefault} (Konteks materi: ${materi}).`,
+      };
+    }),
 
-    capaianPembelajaran: `Pada akhir ${fase}, murid mampu menganalisis, mengaplikasikan konsep, dan memecahkan permasalahan nyata yang berkaitan dengan materi ${materi} secara bernalar kritis, kreatif, dan bergotong royong dalam kehidupan sehari-hari.`,
+    capaianPembelajaran: form.capaianPembelajaran?.trim()
+      ? form.capaianPembelajaran.trim()
+      : `Pada akhir ${fase}, murid mampu menganalisis, mengaplikasikan konsep, dan memecahkan permasalahan nyata yang berkaitan dengan materi ${materi} secara bernalar kritis, kreatif, dan bergotong royong dalam kehidupan sehari-hari.`,
 
-    tujuanPembelajaran: `Melalui penerapan model ${model} dan investigasi terbimbing pada LKPD, murid mampu mengidentifikasi konsep kunci, menyelesaikan studi kasus kontekstual pada materi ${materi}, dan merefleksikan kebermanfaatannya dengan tingkat akurasi minimal 80%.`,
+    tujuanPembelajaran: form.tujuanPembelajaran?.trim()
+      ? form.tujuanPembelajaran.trim()
+      : `Melalui penerapan model ${model} dan investigasi terbimbing pada LKPD, murid mampu mengidentifikasi konsep kunci, menyelesaikan studi kasus kontekstual pada materi ${materi}, dan merefleksikan kebermanfaatannya dengan tingkat akurasi minimal 80%.`,
 
     pendekatanPembelajaran: "Deep Learning (Bermakna, Berkesadaran, Menggembirakan), Experiential Learning & Contextual Teaching.",
     modelPembelajaran: model,

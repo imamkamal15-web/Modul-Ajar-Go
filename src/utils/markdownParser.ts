@@ -47,27 +47,157 @@ export function parseMarkdownToModule(
       }
     }
 
+    // Helper to sanitize extracted field text (strip surrounding asterisks/brackets/placeholders and extra whitespace)
+    const cleanText = (txt: string) => {
+      let res = txt.trim();
+      // Remove trailing separator dashes if any
+      res = res.replace(/(\r?\n)*---+\s*$/g, "").trim();
+      // If it starts with brackets like [Isi...] strip leading [ and trailing ]
+      if (res.startsWith("[") && res.endsWith("]")) {
+        res = res.slice(1, -1).trim();
+      }
+      return res;
+    };
+
     // Extract Section A: IDENTIFIKASI
-    const kesiapanMatch = markdown.match(/\*?\*?Identifikasi Kesiapan Murid:\*?\*?\s*([\s\S]*?)(?=\n\*?\*?Karakteristik|\n\*\*Dimensi|\n## B|$)/i);
-    if (kesiapanMatch && kesiapanMatch[1].trim()) {
-      base.kesiapanMurid = kesiapanMatch[1].trim();
+    // 1. Identifikasi Kesiapan Murid
+    const kesiapanMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Identifikasi Kesiapan Murid(?:\*?\*?)?\s*[:\-]?\s*([\s\S]*?)(?=(?:\r?\n)\s*(?:[*#_>\s-]*)\*?\*?(?:Karakteristik Materi Pelajaran|Karakteristik Materi|Dimensi Profil Lulusan|Dimensi Profil|## B|\n---)|$)/i
+    );
+    if (kesiapanMatch && cleanText(kesiapanMatch[1])) {
+      base.kesiapanMurid = cleanText(kesiapanMatch[1]);
     }
 
-    const karakteristikMatch = markdown.match(/\*?\*?Karakteristik Materi Pelajaran:\*?\*?\s*([\s\S]*?)(?=\n\*?\*?Dimensi|\n## B|$)/i);
-    if (karakteristikMatch && karakteristikMatch[1].trim()) {
-      base.karakteristikMateriPelajaran = karakteristikMatch[1].trim();
-      base.karakteristikMateri = karakteristikMatch[1].trim();
+    // 2. Karakteristik Materi Pelajaran
+    const karakteristikMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Karakteristik Materi(?: Pelajaran)?(?:\*?\*?)?\s*[:\-]?\s*([\s\S]*?)(?=(?:\r?\n)\s*(?:[*#_>\s-]*)\*?\*?(?:Dimensi Profil Lulusan|Dimensi Profil|## B|\n---)|$)/i
+    );
+    if (karakteristikMatch && cleanText(karakteristikMatch[1])) {
+      const cleanedKarakteristik = cleanText(karakteristikMatch[1]);
+      base.karakteristikMateriPelajaran = cleanedKarakteristik;
+      base.karakteristikMateri = cleanedKarakteristik;
+    }
+
+    // 3. Dimensi Profil Lulusan (Parse checkmarks and contextual explanations if present)
+    const dimensiBlockMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Dimensi Profil(?: Lulusan)?(?:\*?\*?)?\s*[:\-]?\s*([\s\S]*?)(?=(?:\r?\n)\s*(?:## B|\n---|## C|$))/i
+    );
+    if (dimensiBlockMatch && dimensiBlockMatch[1]) {
+      const dimBlock = dimensiBlockMatch[1];
+      const dimensionMap: { [key: string]: string } = {
+        "penalaran-kritis": "Penalaran Kritis",
+        "kreativitas": "Kreativitas",
+        "kolaborasi": "Kolaborasi",
+        "kemandirian": "Kemandirian",
+        "komunikasi": "Komunikasi",
+        "keimanan-ketaqwaan": "Keimanan dan Ketaqwaan",
+        "kewargaan": "Kewargaan",
+      };
+
+      const updatedDimensi = base.dimensiProfilLulusan.map((item) => {
+        // Regex pattern to check if checked [v] or [✓] or [x] and get optional contextual explanation
+        const itemRegex = new RegExp(
+          `\\[([✓vxX ])\\]\\s*\\*?\\*?${item.label}\\*?\\*?(?:[:\\-]?\\s*([^\\n]+))?`,
+          "i"
+        );
+        const match = dimBlock.match(itemRegex);
+        if (match) {
+          const isChecked = match[1] !== " ";
+          const explanation = match[2]?.trim();
+          return {
+            ...item,
+            checked: isChecked,
+            penjelasan: explanation || item.penjelasan,
+          };
+        }
+        return item;
+      });
+      base.dimensiProfilLulusan = updatedDimensi;
     }
 
     // Extract Section B: DESAIN PEMBELAJARAN
-    const cpMatch = markdown.match(/\*?\*?Capaian Pembelajaran:\*?\*?\s*([\s\S]*?)(?=\n\*?\*?Tujuan Pembelajaran|\n\*?\*?Praktik Pedagogis|$)/i);
-    if (cpMatch && cpMatch[1].trim()) {
-      base.capaianPembelajaran = cpMatch[1].trim();
+    // 1. Capaian Pembelajaran
+    const cpMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Capaian Pembelajaran(?:\*?\*?)?\s*[:\-]?\s*([\s\S]*?)(?=(?:\r?\n)\s*(?:[*#_>\s-]*)\*?\*?(?:Tujuan Pembelajaran|Praktik Pedagogis|Pendekatan Pembelajaran|## C|\n---)|$)/i
+    );
+    if (cpMatch && cleanText(cpMatch[1])) {
+      base.capaianPembelajaran = cleanText(cpMatch[1]);
     }
 
-    const tpMatch = markdown.match(/\*?\*?Tujuan Pembelajaran:\*?\*?\s*([\s\S]*?)(?=\n\*?\*?Praktik Pedagogis|\n\*?\*?Pendekatan|$)/i);
-    if (tpMatch && tpMatch[1].trim()) {
-      base.tujuanPembelajaran = tpMatch[1].trim();
+    // 2. Tujuan Pembelajaran
+    const tpMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Tujuan Pembelajaran(?:\*?\*?)?\s*[:\-]?\s*([\s\S]*?)(?=(?:\r?\n)\s*(?:[*#_>\s-]*)\*?\*?(?:Praktik Pedagogis|Pendekatan Pembelajaran|Lingkungan Pembelajaran|Model Pembelajaran|## C|\n---)|$)/i
+    );
+    if (tpMatch && cleanText(tpMatch[1])) {
+      base.tujuanPembelajaran = cleanText(tpMatch[1]);
+    }
+
+    // 3. Praktik Pedagogis (Pendekatan, Model, Metode)
+    const pendekatanMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Pendekatan Pembelajaran(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (pendekatanMatch && cleanText(pendekatanMatch[1])) {
+      base.pendekatanPembelajaran = cleanText(pendekatanMatch[1]);
+    }
+
+    const modelMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Model Pembelajaran(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (modelMatch && cleanText(modelMatch[1])) {
+      base.modelPembelajaran = cleanText(modelMatch[1]);
+    }
+
+    const metodeMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Metode Pembelajaran(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (metodeMatch && cleanText(metodeMatch[1])) {
+      base.metodePembelajaran = cleanText(metodeMatch[1]);
+    }
+
+    // 4. Lingkungan & Kemitraan Pembelajaran
+    const budayaMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Budaya Belajar(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (budayaMatch && cleanText(budayaMatch[1])) {
+      base.budayaBelajar = cleanText(budayaMatch[1]);
+    }
+
+    const ruangFisikMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Ruang Fisik(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (ruangFisikMatch && cleanText(ruangFisikMatch[1])) {
+      base.ruangFisik = cleanText(ruangFisikMatch[1]);
+    }
+
+    const kemitraanMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Antar\s*murid(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    ) || markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Kemitraan(?:\s*Pembelajaran)?(?:\s*Antar\s*murid)?(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (kemitraanMatch && cleanText(kemitraanMatch[1])) {
+      base.kemitraanMurid = cleanText(kemitraanMatch[1]);
+    }
+
+    // 5. Pemanfaatan Digital & Media Pembelajaran
+    const platformMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Platform Desain(?:\s*\/\s*Media Digital)?(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (platformMatch && cleanText(platformMatch[1])) {
+      base.platformDigital = cleanText(platformMatch[1]);
+    }
+
+    const perangkatMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Perangkat(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (perangkatMatch && cleanText(perangkatMatch[1])) {
+      base.perangkat = cleanText(perangkatMatch[1]);
+    }
+
+    const mediaMatch = markdown.match(
+      /(?:^|\n)\s*(?:[*#_>\s-]*)\*?\*?Media Pembelajaran(?:\*?\*?)?\s*[:\-]?\s*([^\n]+)/i
+    );
+    if (mediaMatch && cleanText(mediaMatch[1])) {
+      base.mediaPembelajaran = cleanText(mediaMatch[1]);
     }
 
     // Extract Section D: ASESMEN

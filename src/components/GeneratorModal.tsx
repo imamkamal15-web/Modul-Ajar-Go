@@ -11,9 +11,20 @@ import {
   Lightbulb,
   CheckCircle2,
   Loader2,
+  Target,
+  CheckSquare,
+  Square,
+  RotateCcw,
+  Compass,
+  Layers,
 } from "lucide-react";
 import { DeepLearningModule } from "../types";
-import { GenerateFormValues, buildFallbackModule } from "../utils/generatorEngine";
+import {
+  GenerateFormValues,
+  buildFallbackModule,
+  STANDARD_PROFIL_DIMENSI,
+  suggestCpAndTp,
+} from "../utils/generatorEngine";
 import { generateModuleMarkdown } from "../utils/markdownGenerator";
 import { parseMarkdownToModule } from "../utils/markdownParser";
 
@@ -31,6 +42,9 @@ const TOPIC_SUGGESTIONS = [
     kelas: "Kelas 4",
     fase: "Fase B",
     model: "Problem Based Learning (PBL) dipadu Gamifikasi",
+    cp: "Pada akhir Fase B, peserta didik menganalisis hubungan antara kebutuhan tumbuhan untuk fotosintesis (cahaya, air, klorofil, karbon dioksida) dan kaitannya dengan kelangsungan hidup makhluk hidup di bumi.",
+    tp: "1. Murid mampu menganalisis proses fotosintesis tumbuhan dan zat yang dihasilkan melalui investigasi terpandu.\n2. Murid mampu menyajikan laporan skema fotosintesis dan rantai makanan secara kreatif dan kolaboratif.",
+    dimensi: ["penalaran-kritis", "kreativitas", "kolaborasi", "keimanan-ketaqwaan"],
   },
   {
     mapel: "Matematika",
@@ -39,6 +53,9 @@ const TOPIC_SUGGESTIONS = [
     kelas: "Kelas 5",
     fase: "Fase C",
     model: "Problem Based Learning (PBL) berbasis Manipulatif Visual",
+    cp: "Pada akhir Fase C, peserta didik dapat membandingkan dan mengurutkan berbagai pecahan termasuk pecahan campuran, serta melakukan operasi penjumlahan dan pengurangan pecahan dengan penyebut berbeda.",
+    tp: "1. Murid mampu menyamakan penyebut pecahan tidak sejenis menggunakan konsep KPK dan media manipulatif.\n2. Murid mampu memecahkan masalah sehari-hari yang berkaitan dengan operasi pecahan berpenyebut tidak sama.",
+    dimensi: ["penalaran-kritis", "kemandirian", "kolaborasi"],
   },
   {
     mapel: "Bahasa Indonesia",
@@ -47,6 +64,9 @@ const TOPIC_SUGGESTIONS = [
     kelas: "Kelas 4",
     fase: "Fase B",
     model: "Project Based Learning (PjBL)",
+    cp: "Pada akhir Fase B, peserta didik mampu menulis teks narasi sederhana dengan alur runtut (orientasi, masalah, penyelesaian), kosa kata kaya, serta penerapan ejaan dan tanda baca yang tepat.",
+    tp: "1. Murid mampu menyusun kerangka cerita narasi berdasarkan peristiwa nyata yang berkesan.\n2. Murid mampu mengembangkan draft tulisan menjadi cerita narasi kreatif yang utuh dan menarik dibaca.",
+    dimensi: ["kreativitas", "komunikasi", "kemandirian"],
   },
   {
     mapel: "Pendidikan Pancasila",
@@ -55,6 +75,9 @@ const TOPIC_SUGGESTIONS = [
     kelas: "Kelas 4",
     fase: "Fase B",
     model: "Inquiry Based Learning & Studi Kasus",
+    cp: "Pada akhir Fase B, peserta didik mampu mengidentifikasi dan mempraktikkan bentuk-bentuk gotong royong dalam keberagaman suku, agama, dan budaya di lingkungan sekitar sekolah dan tempat tinggal.",
+    tp: "1. Murid mampu menguraikan nilai penting kerja sama dan gotong royong melalui telaah studi kasus nyata.\n2. Murid mampu merancang kesepakatan aksi peduli lingkungan kelas secara berkelompok.",
+    dimensi: ["kolaborasi", "kewargaan", "keimanan-ketaqwaan", "komunikasi"],
   },
   {
     mapel: "Ilmu Pengetahuan Alam (IPA)",
@@ -63,6 +86,9 @@ const TOPIC_SUGGESTIONS = [
     kelas: "Kelas 7",
     fase: "Fase D",
     model: "Discovery Learning & Observasi Lapangan",
+    cp: "Pada akhir Fase D, peserta didik mampu mengidentifikasi interaksi antarmakhluk hidup dan lingkungannya dalam jaring-jaring makanan serta memprediksi dampak perubahan lingkungan terhadap ekosistem.",
+    tp: "1. Murid mampu mengidentifikasi rantai makanan dan tingkatan trofik melalui pengamatan kebun sekolah.\n2. Murid mampu memprediksi dampak gangguan ekologis terhadap dinamika populasi konsumen dan produsen.",
+    dimensi: ["penalaran-kritis", "kolaborasi", "kewargaan"],
   },
   {
     mapel: "Informatika",
@@ -71,6 +97,9 @@ const TOPIC_SUGGESTIONS = [
     kelas: "Kelas 8",
     fase: "Fase D",
     model: "Problem Based Learning (PBL) Unplugged",
+    cp: "Pada akhir Fase D, peserta didik mampu menerapkan prinsip berpikir komputasional (dekomposisi, pengenalan pola, abstraksi, dan perancangan algoritma) untuk menyelesaikan tantangan logis terstruktur.",
+    tp: "1. Murid mampu memecah suatu proses aktivitas rumit menjadi tahapan langkah kerja sederhana (dekomposisi).\n2. Murid mampu mempresentasikan algoritma pemecahan masalah dengan diagram alur yang jelas.",
+    dimensi: ["penalaran-kritis", "kreativitas", "kemandirian"],
   },
 ];
 
@@ -97,6 +126,15 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
     nipKepsek: "19720415 199803 1 004",
     kota: "Jakarta",
     catatanTambahan: "Fokuskan pada latihan berkesadaran (mindful check-in) di awal dan pengalaman konkret murid.",
+    capaianPembelajaran: "",
+    tujuanPembelajaran: "",
+    dimensiProfilLulusan: [
+      "penalaran-kritis",
+      "kreativitas",
+      "kolaborasi",
+      "kemandirian",
+      "keimanan-ketaqwaan",
+    ],
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -113,6 +151,48 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
       kelas: sug.kelas,
       fase: sug.fase,
       modelPembelajaran: sug.model,
+      capaianPembelajaran: sug.cp,
+      tujuanPembelajaran: sug.tp,
+      dimensiProfilLulusan: sug.dimensi,
+    }));
+  };
+
+  const toggleDimensi = (key: string) => {
+    setForm((prev) => {
+      const current = prev.dimensiProfilLulusan || [];
+      const exists = current.includes(key);
+      const updated = exists ? current.filter((k) => k !== key) : [...current, key];
+      return { ...prev, dimensiProfilLulusan: updated };
+    });
+  };
+
+  const handleSelectAllDimensi = () => {
+    setForm((prev) => ({
+      ...prev,
+      dimensiProfilLulusan: STANDARD_PROFIL_DIMENSI.map((d) => d.key),
+    }));
+  };
+
+  const handleSelectCoreDimensi = () => {
+    setForm((prev) => ({
+      ...prev,
+      dimensiProfilLulusan: ["penalaran-kritis", "kreativitas", "kolaborasi"],
+    }));
+  };
+
+  const handleResetDimensi = () => {
+    setForm((prev) => ({
+      ...prev,
+      dimensiProfilLulusan: [],
+    }));
+  };
+
+  const handleAutoSuggestCpTp = () => {
+    const { cp, tp } = suggestCpAndTp(form.mataPelajaran, form.fase, form.materiPelajaran);
+    setForm((prev) => ({
+      ...prev,
+      capaianPembelajaran: cp,
+      tujuanPembelajaran: tp,
     }));
   };
 
@@ -391,11 +471,173 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
             </div>
           </div>
 
-          {/* Section 2: School & Signature Data */}
+          {/* Section 2: Capaian & Tujuan Pembelajaran (CP & TP) */}
+          <div className="space-y-3 pt-3 border-t border-slate-200">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <Target className="w-4 h-4 text-emerald-600" />
+                  <span>2. Capaian & Tujuan Pembelajaran (CP & TP)</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Masukkan CP resmi & rumusan TP yang Anda gunakan, atau gunakan rekomendasi kurikulum otomatis.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleAutoSuggestCpTp}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-emerald-800 bg-emerald-100/80 hover:bg-emerald-200/90 border border-emerald-300 transition-colors shadow-2xs"
+                  title="Otomatis isi rekomendasi CP & TP standar sesuai mata pelajaran dan materi"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Rekomendasikan CP & TP</span>
+                </button>
+                {(form.capaianPembelajaran || form.tujuanPembelajaran) && (
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, capaianPembelajaran: "", tujuanPembelajaran: "" })}
+                    className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    title="Kosongkan kolom CP & TP"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-3 bg-slate-50/80 p-3.5 rounded-xl border border-slate-200">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-slate-800 flex items-center gap-1">
+                    <span>Capaian Pembelajaran (CP) Sesuai Fase & Elemen</span>
+                  </label>
+                  <span className="text-[10px] text-slate-400 italic">Opsional / Dokumen Resmi</span>
+                </div>
+                <textarea
+                  rows={2}
+                  value={form.capaianPembelajaran || ""}
+                  onChange={(e) => setForm({ ...form, capaianPembelajaran: e.target.value })}
+                  placeholder={`Contoh: Pada akhir ${form.fase || "fase"}, murid menganalisis proses fotosintesis pada tumbuhan, memahami peran penting cahaya matahari, serta mengaitkannya dengan jaring-jaring makanan...`}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 bg-white text-xs sm:text-sm placeholder:text-slate-400 transition-shadow"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-slate-800 flex items-center gap-1">
+                    <span>Tujuan Pembelajaran (TP) Berbasis Operasional ABCD</span>
+                  </label>
+                  <span className="text-[10px] text-slate-400 italic">Opsional / Alur Tujuan Pembelajaran</span>
+                </div>
+                <textarea
+                  rows={3}
+                  value={form.tujuanPembelajaran || ""}
+                  onChange={(e) => setForm({ ...form, tujuanPembelajaran: e.target.value })}
+                  placeholder="Contoh:&#10;1. Melalui observasi video dan simulasi, murid mampu menganalisis bahan dan hasil fotosintesis dengan akurasi 80%.&#10;2. Melalui diskusi tim terarah, murid mampu merumuskan kesimpulan manfaat fotosintesis bagi makhluk hidup."
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 bg-white text-xs sm:text-sm placeholder:text-slate-400 font-mono text-xs transition-shadow"
+                />
+              </div>
+
+              <div className="text-[11px] text-emerald-900 bg-emerald-50/90 p-2.5 rounded-lg border border-emerald-200 flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                <span>
+                  <strong>Kemudahan Guru:</strong> Jika kolom CP & TP ini diisi, modul yang dihasilkan akan <strong>100% menggunakan rumusan CP & TP yang Anda tetapkan</strong> sehingga dijamin selaras dengan buku administrasi sekolah dan ATP Anda.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Pilihan Dimensi Profil Lulusan / Profil Pelajar Pancasila */}
+          <div className="space-y-3 pt-3 border-t border-slate-200">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <Compass className="w-4 h-4 text-teal-600" />
+                    <span>3. Pilihan Dimensi Profil Lulusan</span>
+                  </h3>
+                  <span className="px-2 py-0.5 text-[10px] font-bold bg-teal-100 text-teal-800 rounded-full border border-teal-200">
+                    {form.dimensiProfilLulusan?.length || 0} dari {STANDARD_PROFIL_DIMENSI.length} Dipilih
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Centang dimensi karakter Profil Pelajar Pancasila yang ingin disasar dan diperkuat pada pembelajaran ini.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleSelectAllDimensi}
+                  className="px-2.5 py-1 text-[11px] rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold border border-slate-200 transition-colors"
+                >
+                  Pilih Semua (7)
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSelectCoreDimensi}
+                  className="px-2.5 py-1 text-[11px] rounded-md bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 font-semibold transition-colors"
+                >
+                  Fokus Inti (3)
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetDimensi}
+                  className="px-2 py-1 text-[11px] rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                >
+                  Kosongkan
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {STANDARD_PROFIL_DIMENSI.map((dim) => {
+                const isChecked = form.dimensiProfilLulusan?.includes(dim.key) ?? true;
+                return (
+                  <div
+                    key={dim.key}
+                    onClick={() => toggleDimensi(dim.key)}
+                    className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer select-none transition-all ${
+                      isChecked
+                        ? "bg-teal-50/70 border-teal-300 text-slate-900 shadow-2xs ring-1 ring-teal-200"
+                        : "bg-slate-50/60 border-slate-200 hover:border-slate-300 text-slate-500"
+                    }`}
+                  >
+                    <div className="mt-0.5 shrink-0">
+                      {isChecked ? (
+                        <CheckSquare className="w-4 h-4 text-teal-700" />
+                      ) : (
+                        <Square className="w-4 h-4 text-slate-400" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className={`text-xs font-bold ${isChecked ? "text-teal-950" : "text-slate-700"}`}>
+                          {dim.label}
+                        </span>
+                        {isChecked && (
+                          <span className="text-[9px] font-semibold text-teal-700 bg-teal-100/90 px-1.5 py-0.2 rounded">
+                            Aktif
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1 leading-snug">
+                        {dim.sublabel}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section 4: School & Signature Data */}
           <div className="space-y-4 pt-2 border-t border-slate-200">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
               <School className="w-3.5 h-3.5 text-teal-600" />
-              <span>2. Satuan Pendidikan & Legalitas Tanda Tangan</span>
+              <span>4. Satuan Pendidikan & Legalitas Tanda Tangan</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -477,11 +719,11 @@ export const GeneratorModal: React.FC<GeneratorModalProps> = ({
             </div>
           </div>
 
-          {/* Section 3: Special Notes */}
+          {/* Section 5: Special Notes */}
           <div className="space-y-2 pt-2 border-t border-slate-200">
-            <label className="block text-xs font-semibold text-slate-700">
-              Catatan Kesiapan Murid / Kebutuhan Khusus Kelas (Opsional)
-            </label>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              5. Catatan Kesiapan Murid / Kebutuhan Khusus Kelas (Opsional)
+            </h3>
             <textarea
               rows={2}
               value={form.catatanTambahan}

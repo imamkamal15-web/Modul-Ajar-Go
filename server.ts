@@ -62,6 +62,9 @@ app.post("/api/generate-module", async (req, res) => {
       nipKepsek,
       kota,
       catatanTambahan,
+      capaianPembelajaran,
+      tujuanPembelajaran,
+      dimensiProfilLulusan,
     } = req.body;
 
     let targetPertemuan = Number(jumlahPertemuan) || 1;
@@ -95,36 +98,36 @@ STRUKTUR DOKUMEN WAJIB:
 ---
 
 ## A. IDENTIFIKASI
-* **Identifikasi Kesiapan Murid:** (Uraikan kemampuan awal murid, kesenjangan pemahaman, dan kebutuhan diferensiasi secara riil).
-* **Karakteristik Materi Pelajaran:** (Jelaskan sifat materi, apakah abstrak/konkret, dan bagaimana cara memfasilitasinya secara kontekstual/menggembirakan).
+* **Identifikasi Kesiapan Murid:** (Tuliskan paragraf analisis kemampuan awal murid, kesenjangan pemahaman, dan kebutuhan diferensiasi secara riil dan komprehensif).
+* **Karakteristik Materi Pelajaran:** (Tuliskan paragraf karakteristik materi, apakah abstrak/konkret, dan cara memfasilitasinya secara kontekstual/menggembirakan).
 * **Dimensi Profil Lulusan:**
-  - [✓] Penalaran Kritis
-  - [✓] Kreativitas
-  - [✓] Kolaborasi
-  - [✓] Kemandirian
-  - [✓] Komunikasi
-  - [✓] Keimanan dan Ketaqwaan
-  - [✓] Kewargaan
-  *(Sesuaikan centang dan beri penjelasan kontekstual)*
+  - [✓] Penalaran Kritis: (Uraian relevansi dengan materi)
+  - [✓] Kreativitas: (Uraian relevansi dengan materi)
+  - [✓] Kolaborasi: (Uraian relevansi dengan materi)
+  - [✓] Kemandirian: (Uraian relevansi dengan materi)
+  - [✓] Komunikasi: (Uraian relevansi dengan materi)
+  - [✓] Keimanan dan Ketaqwaan: (Uraian relevansi dengan materi)
+  - [✓] Kewargaan: (Uraian relevansi dengan materi)
+  *(Pilih dimensi yang relevan, beri tanda centang [✓] dan penjelasan singkat)*
 
 ---
 
 ## B. DESAIN PEMBELAJARAN
-* **Capaian Pembelajaran:** [Elemen CP Kurikulum Merdeka terkini yang tepat]
-* **Tujuan Pembelajaran:** [Rumusan prinsip ABCD/operasional, spesifik, dan terukur]
+* **Capaian Pembelajaran:** (Tuliskan rumusan Capaian Pembelajaran resmi elemen Fase terkait secara utuh dan jelas tanpa tanda kurung siku [])
+* **Tujuan Pembelajaran:** (Tuliskan rumusan Tujuan Pembelajaran berbasis prinsip operasional ABCD secara tuntas tanpa tanda kurung siku [])
 * **Praktik Pedagogis:**
   * **Pendekatan Pembelajaran:** Deep Learning (Bermakna, Berkesadaran, Menggembirakan), Experiential Learning / Contextual Learning.
-  * **Model Pembelajaran:** [Model yang relevan, misal: ${modelPembelajaran || "Problem Based Learning (PBL) berpadu Gamifikasi"}]
-  * **Metode Pembelajaran:** [Variasi metode aktif, misal: Permainan edukatif, investigasi pos, diskusi tim, simulasi, presentasi]
+  * **Model Pembelajaran:** ${modelPembelajaran || "Problem Based Learning (PBL) berpadu Gamifikasi"}
+  * **Metode Pembelajaran:** Permainan edukatif pemantik, investigasi pos/studi kasus, diskusi kolaboratif tim, dan presentasi unjuk karya.
 * **Lingkungan Pembelajaran:**
-  * **Budaya Belajar:** [Eksplorasi aktif, saling menghargai, rasa ingin tahu tinggi, keberanian berekspresi]
-  * **Ruang Fisik:** [Ruang kelas fleksibel, sudut baca/pos eksplorasi, area luar ruang]
+  * **Budaya Belajar:** Eksplorasi aktif, saling menghargai pendapat, rasa ingin tahu tinggi, dan berani berekspresi tanpa takut salah.
+  * **Ruang Fisik:** Ruang kelas dinamis dan fleksibel dengan pos belajar/sudut eksperimen serta area luar ruang.
 * **Kemitraan Pembelajaran:**
-  * **Antar murid:** [Kolaborasi tim kecil, peer-tutoring/tutor sebaya]
+  * **Antar murid:** Kolaborasi tim kecil heterogen, tutor sebaya (peer-tutoring), dan apresiasi karya tim.
 * **Pemanfaatan Digital:**
-  * **Platform Desain / Media Digital:** [Canva / Quizizz / Wordwall / Video interaktif / Slide]
-  * **Perangkat:** [Proyektor LCD, Laptop, Speaker, Smartphone / Tablet]
-* **Media Pembelajaran:** [LKPD Interaktif, Alat peraga nyata/kartu tantangan, materi konkret]
+  * **Platform Desain / Media Digital:** Canva for Education, Quizizz / Wordwall, Slide Interaktif, dan Video Edukatif.
+  * **Perangkat:** Proyektor LCD, Laptop, Speaker Audio, Smartphone / Tablet.
+* **Media Pembelajaran:** LKPD Interaktif Tematik, Alat peraga konkret / kartu tantangan bernalar, dan rubrik asesmen.
 
 ---
 
@@ -268,6 +271,9 @@ NIP. ${nipGuru || "NIP. ........................."}
 - Kepala Sekolah: ${namaKepsek || "Kepala Sekolah"} (NIP: ${nipKepsek || "-"})
 - Kota: ${kota || "Jakarta"}
 ${catatanTambahan ? `- Catatan Khusus / Diferensiasi: ${catatanTambahan}` : ""}
+${capaianPembelajaran && capaianPembelajaran.trim() ? `- Capaian Pembelajaran (CP) Yang Diinginkan Guru: "${capaianPembelajaran.trim()}". (PENTING: Gunakan rumusan CP ini secara presisi pada bagian ## B. DESAIN PEMBELAJARAN -> Capaian Pembelajaran).` : ""}
+${tujuanPembelajaran && tujuanPembelajaran.trim() ? `- Tujuan Pembelajaran (TP) Yang Diinginkan Guru: "${tujuanPembelajaran.trim()}". (PENTING: Gunakan rumusan TP ini secara presisi pada bagian ## B. DESAIN PEMBELAJARAN -> Tujuan Pembelajaran dan selaraskan sintak kegiatan serta asesmen dengannya).` : ""}
+${Array.isArray(dimensiProfilLulusan) && dimensiProfilLulusan.length > 0 ? `- Dimensi Profil Lulusan Pilihan Guru: ${dimensiProfilLulusan.join(", ")}. (PENTING: Berikan tanda centang [✓] khusus pada dimensi-dimensi ini di bagian ## A. IDENTIFIKASI -> Dimensi Profil Lulusan, dan sertakan uraian relevansinya).` : ""}
 
 Pastikan output adalah Markdown utuh yang siap pakai, mematuhi semua tabel, tanpa terpotong!`;
 
