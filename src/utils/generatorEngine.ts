@@ -179,6 +179,712 @@ export function suggestCpAndTp(mapel: string, fase: string, materi: string) {
   return { cp, tp };
 }
 
+export interface CanonicalSyntaxItem {
+  sintakNomor: number;
+  namaSintak: string;
+  tagDeepLearning: string;
+  dimensiProfil: string;
+  deskripsi: string;
+}
+
+export function generateModelSyntaxSystem(
+  model: string,
+  materi: string,
+  mapel: string,
+  activeDimNames: string
+) {
+  const norm = model.toLowerCase();
+  const dim = activeDimNames || "Penalaran Kritis & Kolaborasi";
+
+  // Category detection
+  const isPjbl = norm.includes("project") || norm.includes("pjbl") || norm.includes("proyek");
+  const isDiscovery = norm.includes("discovery");
+  const isInquiry = norm.includes("inquiry") || norm.includes("inkuiri");
+  const isExperiential = norm.includes("experiential") || norm.includes("kolb");
+  const isCooperative = norm.includes("cooperative") || norm.includes("kooperatif");
+  const isDifferentiated = norm.includes("diferensiasi") || norm.includes("tarl");
+  // Default is Problem Based Learning (PBL)
+
+  // 1. Canonical Single-Meeting Syntaxes (Sintaks Baku Lengkap untuk 1 Pertemuan)
+  let singleMeetingSintak: CanonicalSyntaxItem[] = [];
+
+  if (isPjbl) {
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Penentuan Pertanyaan Mendasar (Start with the Essential Question)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+        dimensiProfil: dim,
+        deskripsi: `Guru menyajikan tayangan fenomena nyata seputar "${materi}" dan melontarkan pertanyaan mendasar pemantik proyek yang solutif bagi kehidupan sehari-hari.\nMurid mencurahkan ide awal dan menyadari pentingnya menghasilkan produk karya nyata yang bermanfaat.`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Mendesain Perencanaan Proyek (Design a Plan for the Project)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Kolaboratif)",
+        dimensiProfil: "Kolaborasi & Kreativitas",
+        deskripsi: `Murid membentuk tim proyek heterogen dan merancang desain produk karya proyek "${materi}" (alat peraga / media edukasi / prototipe karya).\nKelompok mengidentifikasi alat, bahan kontekstual ramah lingkungan, aturan main, dan pembagian peran tim secara inklusif.`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Menyusun Jadwal Pelaksanaan Aktivitas Proyek (Create a Schedule)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kemandirian & Regulasi Diri)",
+        dimensiProfil: "Kemandirian & Kolaborasi",
+        deskripsi: `Kelompok dipandu guru menyusun linimasa jadwal aktivitas pengerjaan proyek dari tahap pengumpulan bahan, perakitan draf, uji coba, hingga penyelesaian akhir secara disiplin.`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Memonitor Keaktifan dan Perkembangan Proyek (Monitor Progress)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential & Pendampingan)",
+        dimensiProfil: "Kreativitas & Kolaborasi",
+        deskripsi: `Murid secara aktif mengeksekusi pembuatan produk proyek "${materi}" sesuai rencana dan panduan LKPD Proyek.\nGuru memonitor dinamika keaktifan setiap anggota, memfasilitasi kendala teknis, dan memberikan bimbingan formatif (scaffolding).`,
+      },
+      {
+        sintakNomor: 5,
+        namaSintak: "Menguji Hasil dan Penilaian Kelayakan Produk (Assess the Outcome)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI & MEREFLEKSI (Uji Kualitas)",
+        dimensiProfil: "Penalaran Kritis & Komunikasi",
+        deskripsi: `Kelompok menguji fungsi dan kelayakan produk proyek "${materi}" yang telah selesai dibuat.\nMurid menyajikan hasil karyanya melalui pameran kelas (Gallery Walk) atau demonstrasi unjuk kerja untuk dinilai.`,
+      },
+      {
+        sintakNomor: 6,
+        namaSintak: "Mengevaluasi Pengalaman Belajar & Refleksi Proyek (Evaluate the Experience)",
+        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Reflektif & Holistik)",
+        dimensiProfil: "Kemandirian & Kewargaan",
+        deskripsi: `Guru dan murid merefleksikan seluruh proses perancangan hingga penciptaan proyek "${materi}".\nSetiap anggota kelompok saling mengapresiasi kontribusi rekan sejawat, mencatat pelajaran bermakna, dan merencanakan keberlanjutan karya.`,
+      },
+    ];
+  } else if (isDiscovery) {
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Pemberian Rangsangan (Stimulation)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Eksplorasi Awal)",
+        dimensiProfil: dim,
+        deskripsi: `Guru memulai pembelajaran dengan menyajikan demonstrasi sains / gambar fenomena konkret seputar "${materi}" tanpa memberi simpulan langsung.\nMurid mengamati keunikan fenomena tersebut dengan penuh rasa ingin tahu dan konsentrasi (mindful observing).`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Pernyataan / Identifikasi Masalah (Problem Statement)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Penalaran Kritis)",
+        dimensiProfil: "Penalaran Kritis & Kemandirian",
+        deskripsi: `Murid diberi kesempatan mengidentifikasi sebanyak mungkin misteri/pertanyaan dari fenomena "${materi}" yang diamati.\nKelompok memilih pertanyaan paling mendasar dan merumuskannya dalam bentuk hipotesis (dugaan sementara) yang dapat diuji.`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Pengumpulan Data (Data Collection)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Penyelidikan Empiris)",
+        dimensiProfil: "Kolaborasi & Penalaran Kritis",
+        deskripsi: `Murid bekerja sama dalam kelompok mengumpulkan informasi dan data faktual relevan melalui studi literasi, observasi objek, atau eksperimen mini sesuai LKPD "${materi}".\nGuru memfasilitasi ketersediaan sumber belajar dan membimbing teknik pencatatan data.`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Pengolahan Data (Data Processing)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Analisis Terpadu)",
+        dimensiProfil: "Penalaran Kritis & Kreativitas",
+        deskripsi: `Kelompok mengolah, mengelompokkan, dan mentabulasi data hasil observasi/eksperimen materi "${materi}".\nMurid berdiskusi aktif menemukan pola hubungan, sebab-akibat, dan menafsirkan arti dari data yang telah dikumpulkan.`,
+      },
+      {
+        sintakNomor: 5,
+        namaSintak: "Pembuktian (Verification)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Uji Hipotesis)",
+        dimensiProfil: "Penalaran Kritis",
+        deskripsi: `Murid melakukan pemeriksaan cermat membuktikan apakah hipotesis awal terbukti atau tidak berdasarkan hasil pengolahan data.\nGuru membimbing pembuktian ilmiah dan membantu meluruskan konsep agar bebas dari miskonsepsi.`,
+      },
+      {
+        sintakNomor: 6,
+        namaSintak: "Menarik Simpulan / Generalisasi (Generalization)",
+        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Konseptualisasi Bermakna)",
+        dimensiProfil: "Komunikasi & Kemandirian",
+        deskripsi: `Berdasarkan hasil verifikasi, murid merumuskan simpulan umum (kaidah/prinsip utama) mengenai materi "${materi}".\nPerwakilan kelompok mempresentasikan temuan generalisasi dan mengaitkannya dengan fenomena dalam kehidupan nyata.`,
+      },
+    ];
+  } else if (isInquiry) {
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Orientasi Masalah Penyelidikan & Pembinaan Iklim Inkuiri",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+        dimensiProfil: dim,
+        deskripsi: `Guru mengondisikan iklim belajar inkuiri dengan menghadapkan murid pada situasi teka-teki/fenomena kontekstual seputar "${materi}".\nMurid mengeksplorasi rasa ingin tahunya dan membangun kesiapan untuk melakukan investigasi ilmiah.`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Merumuskan Masalah Penyelidikan",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Penalaran Kritis)",
+        dimensiProfil: "Penalaran Kritis",
+        deskripsi: `Murid dipandu guru membatasi ruang lingkup dan merumuskan pertanyaan penyelidikan ilmiah yang jelas dan terukur seputar "${materi}".\nKelompok mendefinisikan variabel-variabel kunci yang akan diselidiki.`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Merumuskan Hipotesis Awal",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kreativitas Berpikir)",
+        dimensiProfil: "Penalaran Kritis & Kreativitas",
+        deskripsi: `Murid menyusun jawaban dugaan sementara (hipotesis) berdasarkan pengetahuan awal dan logika rasional.\nSetiap kelompok mendiskusikan landasan berpikir di balik hipotesis yang diajukan.`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Mengumpulkan Data & Eksplorasi Pembuktian (Data Gathering)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
+        dimensiProfil: "Kolaborasi & Kemandirian",
+        deskripsi: `Murid melakukan penyelidikan aktif, melakukan pengujian/praktik langsung, dan mencatat fakta-fakta kuantitatif maupun kualitatif terkait "${materi}".\nGuru mengarahkan prosedur keselamatan kerja dan pendampingan terarah.`,
+      },
+      {
+        sintakNomor: 5,
+        namaSintak: "Menguji Hipotesis & Analisis Bukti Temuan",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Analisis Bukti)",
+        dimensiProfil: "Penalaran Kritis",
+        deskripsi: `Kelompok menganalisis data empiris yang diperoleh untuk menguji kebenaran hipotesis awal materi "${materi}".\nMurid membandingkan bukti yang ditemukan dengan teori dasar pada buku ajar dan menarik korelasi nyata.`,
+      },
+      {
+        sintakNomor: 6,
+        namaSintak: "Merumuskan Kesimpulan & Refleksi Solutif",
+        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Reflektif & Sintesis)",
+        dimensiProfil: "Komunikasi & Kemandirian",
+        deskripsi: `Murid menyusun simpulan ilmiah tuntas dari keseluruhan proses inkuiri "${materi}".\nKelompok mempresentasikan hasil penyelidikan dan merefleksikan cara berpikir ilmiah yang telah mereka kembangkan.`,
+      },
+    ];
+  } else if (isExperiential) {
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Pengalaman Konkret (Concrete Experience / Merasakan & Mengalami Langsung)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Experiential & Joyful)",
+        dimensiProfil: dim,
+        deskripsi: `Murid diajak mengalami langsung fenomena materi "${materi}" melalui simulasi peran, observasi lapangan langsung, atau interaksi dengan benda nyata.\nMurid merasakan sensasi pengalaman belajar secara utuh tanpa penilaian teoritis di awal.`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Observasi Reflektif (Reflective Observation / Meninjau & Mengamati)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MEREFLEKSI (Mindful Observation)",
+        dimensiProfil: "Penalaran Kritis & Kemandirian",
+        deskripsi: `Murid menghentikan aktivitas sejenak untuk merenungkan dan meninjau kembali apa yang baru saja mereka alami seputar "${materi}".\nKelompok mendiskusikan: Apa yang terjadi? Mengapa fenomena tersebut terjadi? Apa faktor penyebab utamanya?`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Konseptualisasi Abstrak (Abstract Conceptualization / Merumuskan Teori & Konsep)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Konseptualisasi Mendalam)",
+        dimensiProfil: "Penalaran Kritis",
+        deskripsi: `Murid mengaitkan pengalaman nyata dan hasil refleksi dengan konsep ilmiah materi "${materi}" menggunakan bantuan guru dan bahan ajar.\nMurid merumuskan teori, prinsip, dan definisi konsep secara terstruktur.`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Eksperimentasi Aktif (Active Experimentation / Menerapkan Konsep pada Kasus Baru)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Aksi Nyata & Solutif)",
+        dimensiProfil: "Kreativitas & Kewargaan",
+        deskripsi: `Murid menguji dan mempraktikkan konsep "${materi}" yang telah dipahami ke dalam situasi/tantangan masalah baru dalam kehidupan sehari-hari.\nKelompok menciptakan solusi atau karya aplikatif yang berdampak positif.`,
+      },
+    ];
+  } else if (isCooperative) {
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Menyampaikan Tujuan Pembelajaran dan Memotivasi Siswa",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+        dimensiProfil: dim,
+        deskripsi: `Guru mengomunikasikan tujuan pembelajaran materi "${materi}" dan membangun motivasi belajar kooperatif yang penuh empati dan kegembiraan.`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Menyajikan Informasi Konseptual Awal",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Fondasi Konsep)",
+        dimensiProfil: "Penalaran Kritis",
+        deskripsi: `Guru menyajikan demonstrasi materi inti "${materi}" melalui slide interaktif atau media visual kontekstual sebagai pijakan diskusi.`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Mengorganisasikan Siswa ke dalam Kelompok-Kelompok Belajar",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kolaboratif)",
+        dimensiProfil: "Kolaborasi & Kemandirian",
+        deskripsi: `Murid dikelompokkan secara heterogen (4-5 murid dengan keragaman kesiapan belajar) dan menerima lembar tugas kooperatif seputar "${materi}".`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Membimbing Kelompok Bekerja dan Berkolaborasi Terarah",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Tutor Sebaya & Scaffolding)",
+        dimensiProfil: "Kolaborasi & Komunikasi",
+        deskripsi: `Kelompok berdiskusi menyelesaikan tantangan studi kasus "${materi}". Anggota kelompok saling menjelaskan konsep (tutor sebaya), sementara guru mendampingi kelompok yang membutuhkan bantuan.`,
+      },
+      {
+        sintakNomor: 5,
+        namaSintak: "Evaluasi dan Presentasi Hasil Belajar Kelompok",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI & MEREFLEKSI (Uji Pemahaman)",
+        dimensiProfil: "Penalaran Kritis & Komunikasi",
+        deskripsi: `Setiap kelompok mempresentasikan hasil pemecahan masalah "${materi}". Guru menguji pemahaman individu dan kelompok melalui tanya jawab konfirmasi.`,
+      },
+      {
+        sintakNomor: 6,
+        namaSintak: "Memberikan Penghargaan dan Pengakuan Prestasi Tim",
+        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Apresiasi Sadar)",
+        dimensiProfil: "Kewargaan & Keimanan",
+        deskripsi: `Guru memberikan penghargaan atas keaktifan, kerja sama tim, dan kemajuan belajar seluruh murid dengan penuh kehangatan.`,
+      },
+    ];
+  } else if (isDifferentiated) {
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Asesmen Diagnostik Awal & Pemetaan Kesiapan Belajar",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Diagnostik Sadar)",
+        dimensiProfil: "Kemandirian & Penalaran Kritis",
+        deskripsi: `Guru memberikan pertanyaan pemantik diagnostik singkat terkait penguasaan awal topik "${materi}" untuk memetakan kesiapan murid.`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Pengelompokan Fleksibel Berdasarkan Tingkat Capaian (Tiered Groups)",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Inklusif & Kolaboratif)",
+        dimensiProfil: "Kolaborasi & Kemandirian",
+        deskripsi: `Murid dikelompokkan secara fleksibel (kelompok pendampingan intensif, mandiri, dan pengayaan) dengan peran yang saling melengkapi.`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Aktivitas Berjenjang dengan Scaffolding Adaptif (Diferensiasi Proses & Konten)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Berjenjang)",
+        dimensiProfil: "Penalaran Kritis & Kreativitas",
+        deskripsi: `Murid mengeksplorasi materi "${materi}" dengan media beragam (konkret/visual/abstrak) dan tingkat kesulitan tugas yang disesuaikan secara berkeadilan.`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Unjuk Pemahaman Melalui Ragam Pilihan Produk (Diferensiasi Produk)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Ekspresi Kreatif)",
+        dimensiProfil: "Kreativitas & Komunikasi",
+        deskripsi: `Murid menunjukkan penguasaan konsep "${materi}" melalui pilihan produk yang diminati (infografis visual, rekaman penjelasan lisan, atau demonstrasi praktis).`,
+      },
+      {
+        sintakNomor: 5,
+        namaSintak: "Konfirmasi Capaian, Umpan Balik Personal & Reorientasi Target",
+        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Umpan Balik Bermakna)",
+        dimensiProfil: "Kemandirian & Penalaran Kritis",
+        deskripsi: `Guru memberikan umpan balik personal yang membangun, merayakan progres belajar setiap murid, dan meneguhkan konsep esensial.`,
+      },
+    ];
+  } else {
+    // Problem Based Learning (PBL) default
+    singleMeetingSintak = [
+      {
+        sintakNomor: 1,
+        namaSintak: "Orientasi Peserta Didik pada Masalah Kontekstual seputar Materi",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+        dimensiProfil: dim,
+        deskripsi: `Guru menyajikan tayangan video autentik / studi kasus riil seputar fenomena "${materi}".\nMurid mengamati secara seksama, mengidentifikasi akar permasalahan, dan merumuskan pertanyaan penyelidikan kritis yang menantang rasa ingin tahu.`,
+      },
+      {
+        sintakNomor: 2,
+        namaSintak: "Mengorganisasikan Peserta Didik untuk Belajar & Meneliti",
+        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kolaboratif & Berkesadaran)",
+        dimensiProfil: "Kolaborasi & Kemandirian",
+        deskripsi: `Guru memfasilitasi pembentukan kelompok kerja heterogen (4-5 murid) dan membagikan LKPD Tematik "${materi}".\nMurid menyepakati pembagian peran (Kapten, Peneliti, Notulis, Presenter) dan merancang alur strategi penyelidikan kelompok.`,
+      },
+      {
+        sintakNomor: 3,
+        namaSintak: "Membimbing Penyelidikan Mandiri dan Kelompok (Investigasi Terarah)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
+        dimensiProfil: "Penalaran Kritis & Kreativitas",
+        deskripsi: `Murid melakukan eksplorasi fakta dan pengumpulan data empiris dari bahan ajar, eksperimen mini, atau observasi konkret seputar "${materi}".\nGuru berkeliling memberikan pendampingan adaptif (scaffolding) dan memvalidasi keabsahan data temuan kelompok.`,
+      },
+      {
+        sintakNomor: 4,
+        namaSintak: "Mengembangkan dan Menyajikan Hasil Karya (Artefak Solusi)",
+        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Komunikasi & Kreativitas)",
+        dimensiProfil: "Komunikasi & Kreativitas",
+        deskripsi: `Kelompok mengolah data temuan, merumuskan solusi inovatif, dan menuangkannya ke dalam karya konkret (peta konsep / poster solusi / infografis mini).\nPerwakilan kelompok mempresentasikan hasil karya di hadapan kelas untuk mendapatkan tanggapan konstruktif.`,
+      },
+      {
+        sintakNomor: 5,
+        namaSintak: "Menganalisis dan Mengevaluasi Proses Pemecahan Masalah",
+        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Reflektif & Konseptual)",
+        dimensiProfil: "Penalaran Kritis & Kemandirian",
+        deskripsi: `Guru bersama murid melakukan rekonstruksi alur pemecahan masalah dan mengonfirmasi kebenaran konsep inti "${materi}".\nMurid mengevaluasi efektivitas solusi yang dirumuskan serta menyepakati komitmen aksi nyata dalam kehidupan sehari-hari.`,
+      },
+    ];
+  }
+
+  // 2. Multi-Meeting Dynamic Planner (Didistribusikan secara progresif sesuai Sintaks Baku Model)
+  const buildMultiMeetingPlan = (count: number) => {
+    return Array.from({ length: count }, (_, idx) => {
+      const num = idx + 1;
+      const isFirst = num === 1;
+      const isLast = num === count;
+
+      let judulFokus = "";
+      let sintakInti: CanonicalSyntaxItem[] = [];
+
+      if (isPjbl) {
+        if (isFirst) {
+          judulFokus = `Pertemuan 1: Penentuan Pertanyaan Mendasar & Desain Perencanaan Proyek "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 1,
+              namaSintak: "Sintak 1 PjBL: Penentuan Pertanyaan Mendasar (Start with Essential Question)",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+              dimensiProfil: dim,
+              deskripsi: `Guru memaparkan fenomena nyata seputar "${materi}" dan melontarkan pertanyaan mendasar pemantik proyek karya aplikatif.\nMurid mencurahkan rasa ingin tahu, mendiskusikan latar belakang kebutuhan solusi, dan merumuskan tujuan proyek bersama.`,
+            },
+            {
+              sintakNomor: 2,
+              namaSintak: "Sintak 2 PjBL: Mendesain Perencanaan Proyek (Design a Plan for the Project)",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Kolaboratif)",
+              dimensiProfil: "Kolaborasi & Kreativitas",
+              deskripsi: `Kelompok heterogen menyusun rancangan desain produk proyek "${materi}" (alat peraga kontekstual / media edukatif / prototipe karya).\nMurid menyepakati pemilihan alat, bahan kontekstual yang mudah didapat, aturan main kelompok, dan pembagian peran tim secara inklusif.`,
+            },
+          ];
+        } else if (isLast) {
+          judulFokus = `Pertemuan ${num}: Gelar Karya Proyek, Uji Kelayakan & Refleksi Pengalaman Belajar "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 5,
+              namaSintak: "Sintak 5 PjBL: Menguji Hasil dan Penilaian Kelayakan Produk (Assess the Outcome)",
+              tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI & MEREFLEKSI (Uji Kualitas)",
+              dimensiProfil: "Penalaran Kritis & Komunikasi",
+              deskripsi: `Setiap kelompok memamerkan produk karya proyek "${materi}" melalui panggung unjuk karya atau pameran kelas 'Gallery Walk'.\nMurid menguji fungsi produk secara langsung di hadapan teman dan guru, serta saling memberikan apresiasi dan rubrik penilaian sejawat.`,
+            },
+            {
+              sintakNomor: 6,
+              namaSintak: "Sintak 6 PjBL: Mengevaluasi Pengalaman Belajar & Refleksi Holistik Proyek",
+              tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Holistik & Bermakna)",
+              dimensiProfil: "Kemandirian & Kewargaan",
+              deskripsi: `Guru bersama seluruh murid mengevaluasi dinamika pengalaman merancang hingga mewujudkan karya proyek seputar "${materi}".\nMurid mengungkapkan refleksi sadar atas tantangan tim yang berhasil dilalui dan merumuskan rencana pemanfaatan karya bagi lingkungan sekolah.`,
+            },
+          ];
+        } else {
+          // Intermediate meetings
+          const progressStage = (num - 1) / (count - 1);
+          if (progressStage < 0.4) {
+            judulFokus = `Pertemuan ${num}: Penyusunan Jadwal & Eksplorasi Bahan Proyek "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 PjBL: Menyusun Jadwal Pelaksanaan Aktivitas Proyek (Create a Schedule)",
+                tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kemandirian & Regulasi Diri)",
+                dimensiProfil: "Kemandirian & Kolaborasi",
+                deskripsi: `Kelompok menyusun linimasa jadwal pelaksanaan aktivitas proyek "${materi}" secara terperinci mulai dari pengumpulan bahan hingga pengujian awal.\nMurid menetapkan target capaian (milestone) harian dan menyepakati komitmen penyelesaian tepat waktu.`,
+              },
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PjBL (Fase 1): Memonitor Perkembangan Proyek - Perakitan Draf Awal Karya",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
+                dimensiProfil: "Kreativitas & Kolaborasi",
+                deskripsi: `Kelompok mulai merealisasikan pembuatan draf karya fisik/digital "${materi}" sesuai desain yang direncanakan.\nGuru berkeliling memonitor dinamika keaktifan anggota dan memastikan seluruh murid terlibat aktif sesuai perannya.`,
+              },
+            ];
+          } else if (progressStage < 0.75) {
+            judulFokus = `Pertemuan ${num}: Eksekusi Produksi Karya Proyek & Pendampingan Scaffolding "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PjBL (Fase 2): Memonitor dan Membimbing Perkembangan Proyek - Eksekusi Detail Karya",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Karya Nyata & Kolaboratif)",
+                dimensiProfil: "Kreativitas & Kemandirian",
+                deskripsi: `Murid secara kolaboratif melanjutkan perakitan detail, pewarnaan, dan penyusunan panduan penggunaan produk proyek "${materi}".\nGuru memberikan pendampingan adaptif (scaffolding) untuk mengatasi kendala teknis dan estetika karya yang dihadapi kelompok.`,
+              },
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PjBL (Fase 3): Validasi Awal Kelayakan & Konsultasi Perbaikan Produk",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI & MEMAHAMI (Refinishing)",
+                dimensiProfil: "Penalaran Kritis & Kolaborasi",
+                deskripsi: `Kelompok berkonsultasi dengan guru memeriksa apakah produk proyek "${materi}" telah memenuhi kriteria esensial pada LKPD.\nMurid mencatat masukan perbaikan dan menyempurnakan aspek fungsi sebelum uji coba final.`,
+              },
+            ];
+          } else {
+            judulFokus = `Pertemuan ${num}: Uji Coba Fungsi Produk, Penyempurnaan & Persiapan Presentasi "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PjBL (Fase 4): Uji Coba Mandiri Produk Karya & Finalisasi Estetika",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Penyempurnaan Karya)",
+                dimensiProfil: "Kreativitas & Penalaran Kritis",
+                deskripsi: `Kelompok melakukan simulasi uji coba mandiri terhadap produk proyek "${materi}" untuk memastikan fungsinya berjalan lancar dan aman.\nMurid menyelesaikan sentuhan akhir (finishing) pada karya fisik/media presentasi.`,
+              },
+              {
+                sintakNomor: 5,
+                namaSintak: "Sintak 5 PjBL (Fase Awal): Penyiapan Media Pameran & Lembar Informasi Produk",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Komunikasi Visual)",
+                dimensiProfil: "Komunikasi & Kolaborasi",
+                deskripsi: `Kelompok menyusun poster ringkas atau kartu identitas produk karya "${materi}" yang menjelaskan cara kerja dan manfaat praktisnya bagi audiens pameran.`,
+              },
+            ];
+          }
+        }
+      } else if (isDiscovery) {
+        if (isFirst) {
+          judulFokus = `Pertemuan 1: Stimulasi Fenomena & Identifikasi Masalah Ilmiah "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 1,
+              namaSintak: "Sintak 1 Discovery: Pemberian Rangsangan (Stimulation)",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Eksplorasi Awal)",
+              dimensiProfil: dim,
+              deskripsi: `Guru menyajikan fenomena kontekstual seputar "${materi}" melalui demonstrasi konkret atau video tanpa langsung mengungkap kesimpulan.\nMurid mengamati fenomena dengan penuh konsentrasi dan membangun kepekaan ilmiah awal.`,
+            },
+            {
+              sintakNomor: 2,
+              namaSintak: "Sintak 2 Discovery: Pernyataan / Identifikasi Masalah (Problem Statement)",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Penalaran Kritis)",
+              dimensiProfil: "Penalaran Kritis & Kemandirian",
+              deskripsi: `Murid merumuskan berbagai pertanyaan pemantik bernalar tinggi mengenai rahasia prinsip materi "${materi}".\nKelompok memilih pertanyaan paling esensial dan merumuskan hipotesis kerja yang akan dibuktikan melalui penyelidikan.`,
+            },
+          ];
+        } else if (isLast) {
+          judulFokus = `Pertemuan ${num}: Pembuktian Fakta Terhadap Hipotesis & Generalisasi Konsep "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 5,
+              namaSintak: "Sintak 5 Discovery: Pembuktian (Verification)",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Uji Hipotesis)",
+              dimensiProfil: "Penalaran Kritis",
+              deskripsi: `Murid melakukan pemeriksaan cermat dan membandingkan hasil pengolahan data dengan hipotesis awal materi "${materi}".\nGuru membimbing verifikasi konseptual secara objektif untuk memastikan kesimpulan bebas dari miskonsepsi.`,
+            },
+            {
+              sintakNomor: 6,
+              namaSintak: "Sintak 6 Discovery: Menarik Simpulan / Generalisasi (Generalization)",
+              tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Konseptualisasi Bermakna)",
+              dimensiProfil: "Komunikasi & Kemandirian",
+              deskripsi: `Berdasarkan hasil pembuktian, kelompok menarik kesimpulan umum prinsip dasar materi "${materi}".\nPerwakilan kelompok mempresentasikan generalisasi di hadapan kelas dan mengaitkannya dengan fenomena kehidupan nyata.`,
+            },
+          ];
+        } else {
+          const progressStage = (num - 1) / (count - 1);
+          if (progressStage < 0.5) {
+            judulFokus = `Pertemuan ${num}: Pengumpulan Data Penyelidikan & Observasi Lapangan "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 Discovery (Tahap 1): Pengumpulan Data Empiris (Data Collection)",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Penyelidikan Empiris)",
+                dimensiProfil: "Kolaborasi & Penalaran Kritis",
+                deskripsi: `Murid bekerja sama dalam kelompok melakukan eksperimen terbimbing, observasi objek langsung, atau telaah bahan ajar kontekstual terkait "${materi}".\nSetiap anggota mencatat data temuan kuantitatif dan kualitatif secara sistematis pada LKPD.`,
+              },
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 Discovery (Tahap 2): Validasi Kelengkapan Bukti & Pengamatan Lanjutan",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Eksplorasi Mendalam)",
+                dimensiProfil: "Kemandirian & Ketelitian",
+                deskripsi: `Guru memandu kelompok memverifikasi apakah data yang terkumpul sudah mencukupi untuk menguji hipotesis "${materi}".\nKelompok melakukan pengamatan ulang pada aspek yang masih meragukan.`,
+              },
+            ];
+          } else {
+            judulFokus = `Pertemuan ${num}: Pengolahan Data, Tabulasi & Analisis Keterkaitan Konsep "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 Discovery (Tahap 1): Pengolahan Data & Tabulasi (Data Processing)",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Analisis Terpadu)",
+                dimensiProfil: "Penalaran Kritis & Kreativitas",
+                deskripsi: `Kelompok mengklasifikasi, menyusun diagram, atau mentabulasi data hasil observasi materi "${materi}".\nMurid berdiskusi aktif mencari pola hubungan sebab-akibat antar fakta yang ditemukan.`,
+              },
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 Discovery (Tahap 2): Diskusi Penalaran Kritis & Penafsiran Hubungan Konsep",
+                tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Interpretasi)",
+                dimensiProfil: "Penalaran Kritis & Kolaborasi",
+                deskripsi: `Murid menafsirkan arti dari data yang telah diolah dan mengaitkannya dengan prinsip ilmiah materi "${materi}".\nGuru mendampingi proses penalaran agar kelompok menemukan benang merah konsep secara mandiri.`,
+              },
+            ];
+          }
+        }
+      } else if (isInquiry) {
+        if (isFirst) {
+          judulFokus = `Pertemuan 1: Orientasi Fenomena Inkuiri & Perumusan Masalah Ilmiah "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 1,
+              namaSintak: "Sintak 1 Inkuiri: Orientasi Masalah Penyelidikan & Pembinaan Iklim Inkuiri",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+              dimensiProfil: dim,
+              deskripsi: `Guru menyajikan fenomena alam/sosial seputar "${materi}" yang memicu tanda tanya besar.\nMurid membangun kesadaran inkuiri dan kesiapan mental untuk menyelidiki rahasia di balik fenomena tersebut.`,
+            },
+            {
+              sintakNomor: 2,
+              namaSintak: "Sintak 2 Inkuiri: Merumuskan Masalah Penyelidikan",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Penalaran Kritis)",
+              dimensiProfil: "Penalaran Kritis",
+              deskripsi: `Murid menguraikan fenomena ke dalam pertanyaan-pertanyaan ilmiah operasional seputar "${materi}".\nKelompok membatasi variabel pengamatan dan menetapkan fokus masalah penyelidikan.`,
+            },
+          ];
+        } else if (isLast) {
+          judulFokus = `Pertemuan ${num}: Uji Hipotesis, Perumusan Kesimpulan & Refleksi Inkuiri "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 5,
+              namaSintak: "Sintak 5 Inkuiri: Menguji Hipotesis & Analisis Bukti Temuan",
+              tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Analisis Bukti)",
+              dimensiProfil: "Penalaran Kritis",
+              deskripsi: `Kelompok menganalisis data empiris yang diperoleh untuk menguji kebenaran hipotesis awal materi "${materi}".\nMurid membandingkan bukti temuan dengan teori dasar buku rujukan secara objektif.`,
+            },
+            {
+              sintakNomor: 6,
+              namaSintak: "Sintak 6 Inkuiri: Merumuskan Kesimpulan & Refleksi Solutif",
+              tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Reflektif & Sintesis)",
+              dimensiProfil: "Komunikasi & Kemandirian",
+              deskripsi: `Murid menyusun simpulan ilmiah tuntas dari keseluruhan proses inkuiri "${materi}".\nKelompok mempresentasikan hasil penyelidikan dan merefleksikan keterampilan bernalar ilmiah yang telah dilatih.`,
+            },
+          ];
+        } else {
+          const progressStage = (num - 1) / (count - 1);
+          if (progressStage < 0.5) {
+            judulFokus = `Pertemuan ${num}: Perumusan Hipotesis & Desain Prosedur Eksplorasi Data "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 Inkuiri: Merumuskan Hipotesis Awal",
+                tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kreativitas Berpikir)",
+                dimensiProfil: "Penalaran Kritis & Kreativitas",
+                deskripsi: `Kelompok menyusun dugaan sementara (hipotesis ilmiah) yang masuk akal terkait fenomena "${materi}".\nMurid menjelaskan landasan logika di balik hipotesis yang mereka sepakati.`,
+              },
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 Inkuiri (Fase 1): Merancang Prosedur Pengujian & Eksplorasi Awal",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Desain Percobaan)",
+                dimensiProfil: "Kemandirian & Kolaborasi",
+                deskripsi: `Kelompok merancang langkah-langkah praktikum atau investigasi data untuk membuktikan hipotesis "${materi}".\nGuru memvalidasi protokol keselamatan dan keabsahan instrumen pengamatan.`,
+              },
+            ];
+          } else {
+            judulFokus = `Pertemuan ${num}: Pengumpulan Data Eksperimen & Analisis Bukti Fakta "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 Inkuiri (Fase 2): Mengumpulkan Data & Eksplorasi Pembuktian (Data Gathering)",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
+                dimensiProfil: "Kolaborasi & Ketelitian",
+                deskripsi: `Murid mengeksekusi praktikum/pengamatan langsung dan mendokumentasikan fakta-fakta kuantitatif dan kualitatif terkait "${materi}" ke dalam LKPD.`,
+              },
+              {
+                sintakNomor: 5,
+                namaSintak: "Sintak 5 Inkuiri (Fase Awal): Verifikasi Silang & Komparasi Data Antar Kelompok",
+                tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Analisis Komparatif)",
+                dimensiProfil: "Penalaran Kritis",
+                deskripsi: `Kelompok membandingkan konsistensi data yang mereka peroleh dengan kelompok lain untuk mendeteksi variasi atau anomali pengamatan seputar "${materi}".`,
+              },
+            ];
+          }
+        }
+      } else {
+        // Problem Based Learning (PBL) default multi-meeting distribution
+        if (isFirst) {
+          judulFokus = `Pertemuan 1: Orientasi Masalah Kontekstual & Pengorganisasian Tim Penyelidik "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 1,
+              namaSintak: "Sintak 1 PBL: Orientasi Peserta Didik pada Masalah Kontekstual seputar Materi",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
+              dimensiProfil: dim,
+              deskripsi: `Guru menayangkan video autentik / studi kasus riil seputar permasalahan "${materi}" yang relevan dengan kehidupan sehari-hari murid.\nMurid mengamati secara seksama, mengidentifikasi akar persoalan, dan merumuskan pertanyaan penyelidikan pemantik kritis.`,
+            },
+            {
+              sintakNomor: 2,
+              namaSintak: "Sintak 2 PBL: Mengorganisasikan Peserta Didik untuk Belajar & Menyusun Rencana Investigasi",
+              tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kolaboratif & Berkesadaran)",
+              dimensiProfil: "Kolaborasi & Kemandirian",
+              deskripsi: `Guru memfasilitasi pembentukan kelompok kerja heterogen (4-5 murid) dan membagikan LKPD Tematik "${materi}".\nMurid menyepakati peran tim (Kapten, Peneliti, Notulis, Presenter) dan merancang alur strategi penyelidikan kelompok.`,
+            },
+          ];
+        } else if (isLast) {
+          judulFokus = `Pertemuan ${num}: Diseminasi Karya Solutif, Evaluasi Pemecahan Masalah & Aksi Nyata "${materi}"`;
+          sintakInti = [
+            {
+              sintakNomor: 4,
+              namaSintak: "Sintak 4 PBL (Fase Pleno): Menyajikan Hasil Karya Solusi Melalui Gelar Pameran / Diskusi Pleno",
+              tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Komunikasi & Apresiasi)",
+              dimensiProfil: "Komunikasi & Kolaborasi",
+              deskripsi: `Setiap kelompok mempresentasikan produk solusi pemecahan masalah "${materi}" di hadapan forum kelas melalui pameran Gallery Walk atau presentasi interaktif.\nKelompok lain memberikan tanggapan apresiatif, kritik membangun, dan pertanyaan penalaran kritis.`,
+            },
+            {
+              sintakNomor: 5,
+              namaSintak: "Sintak 5 PBL: Menganalisis dan Mengevaluasi Proses Pemecahan Masalah serta Refleksi Holistik",
+              tagDeepLearning: "DEEP LEARNING - MEREFLEKSI (Reflektif & Sadar)",
+              dimensiProfil: "Penalaran Kritis & Kemandirian",
+              deskripsi: `Guru bersama murid merekonstruksi seluruh alur pemecahan masalah dan mengonfirmasi kebenaran konsep inti "${materi}".\nMurid mengevaluasi efektivitas solusi yang dirumuskan, menyimpulkan pemahaman bermakna, dan merancang komitmen aksi nyata di lingkungan sekitar.`,
+            },
+          ];
+        } else {
+          const progressStage = (num - 1) / (count - 1);
+          if (progressStage < 0.45) {
+            judulFokus = `Pertemuan ${num}: Penyelidikan Lapangan Terarah & Pengumpulan Bukti Empiris "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 PBL (Fase 1): Membimbing Penyelidikan Mandiri dan Kelompok - Pengumpulan Data Bukti",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
+                dimensiProfil: "Penalaran Kritis & Kolaborasi",
+                deskripsi: `Kelompok melakukan eksplorasi lapangan, studi literatur, atau eksperimen mini untuk mengumpulkan bukti data seputar materi "${materi}".\nMurid mencatat data temuan faktual pada LKPD Tematik dipandu bimbingan bertahap dari guru.`,
+              },
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 PBL (Fase 2): Pendampingan Scaffolding & Klarifikasi Awal Temuan",
+                tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Berdiferensiasi)",
+                dimensiProfil: "Kemandirian & Penalaran Kritis",
+                deskripsi: `Guru berkeliling memberikan bimbingan intensif bagi kelompok yang memerlukan bantuan (scaffolding) dan memfasilitasi pendalaman bagi kelompok yang siap mandiri.\nKelompok memastikan validitas data bukti yang dikumpulkan.`,
+              },
+            ];
+          } else if (progressStage < 0.8) {
+            judulFokus = `Pertemuan ${num}: Analisis Data Penyelidikan & Perumusan Draf Karya Solusi "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 3,
+                namaSintak: "Sintak 3 PBL (Fase 3): Analisis Data Kritis & Verifikasi Alternatif Solusi",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Analitis & Kritis)",
+                dimensiProfil: "Penalaran Kritis",
+                deskripsi: `Kelompok menganalisis data temuan, membandingkannya dengan teori dasar konsep "${materi}", dan mengidentifikasi pola kunci pemecahan masalah.\nMurid merumuskan alternatif solusi terbaik yang paling aplikatif.`,
+              },
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PBL (Fase 1): Perancangan Draf Artefak Karya Solusi Pemecahan Masalah",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Kreativitas Solutif)",
+                dimensiProfil: "Kreativitas & Kolaborasi",
+                deskripsi: `Kelompok mulai menyusun draf produk karya solusi (peta konsep analitis, infografis mini, atau poster panduan aksi) terkait materi "${materi}".`,
+              },
+            ];
+          } else {
+            judulFokus = `Pertemuan ${num}: Finalisasi Karya Solusi, Validasi Tim & Uji Coba Presentasi "${materi}"`;
+            sintakInti = [
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PBL (Fase 2): Mengembangkan dan Menyempurnakan Hasil Karya (Artefak Solusi)",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Karya Nyata)",
+                dimensiProfil: "Kreativitas & Komunikasi",
+                deskripsi: `Kelompok menyelesaikan pembuatan artefak karya solusi secara rapi dan estetis.\nMurid memeriksa kelengkapan informasi argumen dan memastikan solusi yang ditawarkan berbasis bukti data valid materi "${materi}".`,
+              },
+              {
+                sintakNomor: 4,
+                namaSintak: "Sintak 4 PBL (Fase 3): Simulasi Internal Kelompok & Penyiapan Argumen Tanya Jawab",
+                tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Kesiapan Presentasi)",
+                dimensiProfil: "Komunikasi & Kolaborasi",
+                deskripsi: `Kelompok melakukan simulasi presentasi internal tim dan membagi tugas peran juru bicara serta penjawab pertanyaan untuk sesi pleno pertemuan berikutnya.`,
+              },
+            ];
+          }
+        }
+      }
+
+      return {
+        pertemuanKe: num,
+        judulFokus: judulFokus || `Pertemuan ${num}: Pendalaman Materi ${materi}`,
+        alokasiWaktu: "2 x 35 Menit",
+        waktuPendahuluan: "10 Menit",
+        deskripsiPendahuluan: [
+          "Orientasi, Salam Hangat, dan Doa bersama yang dipimpin perwakilan murid (Keimanan dan Ketaqwaan).",
+          "Pemeriksaan kesiapan belajar, penataan ruang kelas fleksibel, dan Mindful Check-in (2 Menit) untuk membangun kehadiran penuh (Joyful Learning).",
+          `Apersepsi mengaitkan progres materi "${materi}" dari sesi sebelumnya dengan tantangan hari ini.`,
+          `Penyampaian target kompetensi Pertemuan ${num} dan kesepakatan belajar kolaboratif.`,
+        ],
+        waktuInti: "50 Menit",
+        sintakInti,
+        waktuPenutup: "10 Menit",
+        deskripsiPenutup: [
+          `DEEP LEARNING – MEREFLEKSI: Murid mengisi jurnal refleksi singkat berkesadaran (Apa hal paling bermakna yang kupahami dari ${materi} hari ini? Tantangan apa yang berhasil kuhadapi?).`,
+          "Pendidik memberikan penguatan, apresiasi atas inisiatif kolaborasi tim, dan arahan misi untuk pertemuan berikutnya.",
+          "Doa penutup penuh rasa syukur dan salam perpisahan yang hangat.",
+        ],
+      };
+    });
+  };
+
+  return {
+    singleMeetingSintak,
+    buildMultiMeetingPlan,
+  };
+}
+
 export function buildFallbackModule(form: GenerateFormValues): DeepLearningModule {
   const mapel = form.mataPelajaran || "Ilmu Pengetahuan Alam dan Sosial (IPAS)";
   const materi = form.materiPelajaran || "Eksplorasi Kontekstual";
@@ -199,156 +905,6 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
     }
   }
 
-  // Generate multi-meeting list if > 1 (supports up to 15 meetings dynamically)
-  let daftarPertemuan: any[] | undefined = undefined;
-
-  if (countPertemuan > 1) {
-    const meetingTemplates = [
-      {
-        judul: "Memahami - Stimulasi Masalah Kontekstual & Fondasi Konsep",
-        tag: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
-        dimensi: "Penalaran Kritis & Keimanan",
-        fokus: `Orientasi masalah autentik seputar ${materi}, pembagian kelompok belajar berdiferensiasi, dan perumusan pertanyaan pemantik awal.`,
-      },
-      {
-        judul: "Memahami & Mengorganisasi - Investigasi Konsep & Perumusan Hipotesis",
-        tag: "DEEP LEARNING - MEMAHAMI (Kolaboratif & Berkesadaran)",
-        dimensi: "Kolaborasi & Kemandirian",
-        fokus: `Telaah bahan ajar kontekstual, observasi objek konkret/fenomena materi ${materi}, dan pembagian peran tim investigasi.`,
-      },
-      {
-        judul: "Mengaplikasi - Pengumpulan Data Lapangan & Eksperimen Terpandu",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Experiential Learning)",
-        dimensi: "Penalaran Kritis & Kolaborasi",
-        fokus: `Eksplorasi aktif melalui percobaan ilmiah/studi kasus nyata, pencatatan data pada LKPD, dan bimbingan berjenjang (scaffolding).`,
-      },
-      {
-        judul: "Mengaplikasi - Analisis Data & Verifikasi Fakta Solusi",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Analitis & Kritis)",
-        dimensi: "Penalaran Kritis",
-        fokus: `Mengolah data hasil investigasi terkait ${materi}, membandingkan dengan hipotesis awal, dan mengidentifikasi pola kunci pemecahan masalah.`,
-      },
-      {
-        judul: "Mengaplikasi - Perancangan Draf Solusi & Prototipe Gagasan",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Kreativitas Solutif)",
-        dimensi: "Kreativitas & Kolaborasi",
-        fokus: `Merancang solusi kreatif berbasis temuan investigasi dan menyusun kerangka visual/karya aplikatif.`,
-      },
-      {
-        judul: "Mengaplikasi & Mendalami - Pemantapan Konseptual & Uji Coba Model",
-        tag: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI (Konseptual)",
-        dimensi: "Penalaran Kritis & Kemandirian",
-        fokus: `Uji coba model/gagasan kelompok, konfirmasi teori dengan guru, dan klarifikasi miskonsepsi yang muncul.`,
-      },
-      {
-        judul: "Mengaplikasi - Diferensiasi Penyelidikan Lanjutan Berbasis Minat",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Berdiferensiasi)",
-        dimensi: "Kemandirian & Kreativitas",
-        fokus: `Penyelidikan kasus lanjutan sesuai profil belajar murid dengan pilihan media (visual, auditori, kinestetik/praktik).`,
-      },
-      {
-        judul: "Mengaplikasi - Pengembangan Produk Karya & Media Unjuk Kerja",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Karya Nyata)",
-        dimensi: "Kreativitas & Komunikasi",
-        fokus: `Pembuatan produk akhir unjuk kerja (laporan mini, poster infografis, alat peraga, atau media digital) secara kolaboratif.`,
-      },
-      {
-        judul: "Mengaplikasi & Meninjau - Finalisasi Karya & Validasi Umpan Balik",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Reflektif)",
-        dimensi: "Kolaborasi & Komunikasi",
-        fokus: `Penyempurnaan produk karya, uji coba presentasi internal kelompok, dan saling memberikan saran konstruktif.`,
-      },
-      {
-        judul: "Mengaplikasi & Mengomunikasikan - Gelar Karya (Gallery Walk) & Peer Review",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Komunikasi & Apresiasi)",
-        dimensi: "Komunikasi & Kewargaan",
-        fokus: `Pameran karya kelas 'Gallery Walk', presentasi perwakilan kelompok, dan pemberian umpan balik apresiatif dari rekan sejawat.`,
-      },
-      {
-        judul: "Merefleksi & Memperbaiki - Rekonstruksi Solusi Berdasarkan Masukan",
-        tag: "DEEP LEARNING - MEREFLEKSI (Perbaikan Sadar)",
-        dimensi: "Penalaran Kritis & Kemandirian",
-        fokus: `Menelaah masukan dari kelompok lain, mengevaluasi kelebihan dan keterbatasan karya, serta merumuskan revisi terbaik.`,
-      },
-      {
-        judul: "Mengaplikasi Lanjutan - Transfer Belajar pada Konteks Masalah Baru",
-        tag: "DEEP LEARNING - MENGAPLIKASI (Kontekstual)",
-        dimensi: "Penalaran Kritis & Kewargaan",
-        fokus: `Menghubungkan konsep materi ${materi} dengan permasalahan lingkungan hidup atau kehidupan sehari-hari di luar sekolah.`,
-      },
-      {
-        judul: "Mengomunikasikan - Presentasi Pleno & Advokasi Solusi Komprehensif",
-        tag: "DEEP LEARNING - MENGAPLIKASI & MEREFLEKSI (Artikulasi)",
-        dimensi: "Komunikasi & Kolaborasi",
-        fokus: `Penyampaian hasil belajar secara komprehensif di forum kelas dan diskusi tanya jawab terpandu.`,
-      },
-      {
-        judul: "Mengevaluasi - Asesmen Sumatif Pemahaman Konsep & Kemampuan HOTs",
-        tag: "DEEP LEARNING - MEMAHAMI & MEREFLEKSI (Evaluatif)",
-        dimensi: "Penalaran Kritis & Kemandirian",
-        fokus: `Pelaksanaan penilaian sumatif berbasis soal penalaran (C3-C5), pengukuran capaian kompetensi, dan analisis kemajuan belajar.`,
-      },
-      {
-        judul: "Merefleksi - Refleksi Holistik, Perayaan Belajar & Rencana Aksi Nyata",
-        tag: "DEEP LEARNING - MEREFLEKSI (Bermakna & Menggembirakan)",
-        dimensi: "Keimanan, Kemandirian & Kewargaan",
-        fokus: `Refleksi mendalam 360° perjalanan belajar modul, penyusunan komitmen aksi nyata bagi masyarakat/lingkungan, dan perayaan karya bersama.`,
-      },
-    ];
-
-    daftarPertemuan = Array.from({ length: countPertemuan }, (_, idx) => {
-      const num = idx + 1;
-      let template;
-      if (num === 1) {
-        template = meetingTemplates[0];
-      } else if (num === countPertemuan) {
-        template = meetingTemplates[meetingTemplates.length - 1];
-      } else {
-        const step = Math.min(
-          meetingTemplates.length - 2,
-          Math.max(1, Math.round(((num - 1) / (countPertemuan - 1)) * (meetingTemplates.length - 2)))
-        );
-        template = meetingTemplates[step];
-      }
-
-      return {
-        pertemuanKe: num,
-        judulFokus: `Pertemuan ${num}: ${template.judul}`,
-        alokasiWaktu: "2 x 35 Menit",
-        waktuPendahuluan: "10 Menit",
-        deskripsiPendahuluan: [
-          "Orientasi, Salam Hangat, dan Doa bersama yang dipimpin perwakilan murid (Keimanan dan Ketaqwaan).",
-          "Pemeriksaan kesiapan belajar, penataan ruang kelas fleksibel, dan Mindful Check-in (2 Menit) untuk membangun kehadiran penuh (Joyful Learning).",
-          `Apersepsi mengaitkan progres materi "${materi}" dari sesi sebelumnya dengan tantangan hari ini.`,
-          `Penyampaian target kompetensi Pertemuan ${num} dan kesepakatan belajar kolaboratif.`,
-        ],
-        waktuInti: "50 Menit",
-        sintakInti: [
-          {
-            sintakNomor: 1,
-            namaSintak: `Aktivitas Eksploratif: ${template.judul.split(" - ")[1] || template.judul}`,
-            tagDeepLearning: template.tag,
-            dimensiProfil: template.dimensi,
-            deskripsi: `${template.fokus}\nMurid bekerja dalam kelompok heterogen terarah dan mengisi lembar kerja investigasi berpanduan diferensiasi.`,
-          },
-          {
-            sintakNomor: 2,
-            namaSintak: "Konfirmasi Konsep, Pendampingan Scaffolding & Validasi Guru",
-            tagDeepLearning: "DEEP LEARNING - MEMAHAMI & MENGAPLIKASI",
-            dimensiProfil: "Penalaran Kritis & Kolaborasi",
-            deskripsi: `Guru berkeliling memberikan bimbingan bagi murid yang membutuhkan scaffolding serta memfasilitasi pengayaan bagi murid yang sudah siap mandiri.\nSetiap kelompok mengonfirmasi keabsahan temuan dan menarik simpulan awal.`,
-          },
-        ],
-        waktuPenutup: "10 Menit",
-        deskripsiPenutup: [
-          "DEEP LEARNING – MEREFLEKSI: Murid mengisi jurnal refleksi singkat (Apa hal paling bermakna yang kupahami hari ini? Tantangan apa yang berhasil kuhadapi?).",
-          "Pendidik memberikan penguatan, apresiasi atas inisiatif kolaborasi tim, dan arahan misi untuk pertemuan berikutnya.",
-          "Doa penutup penuh rasa syukur dan salam perpisahan yang hangat.",
-        ],
-      };
-    });
-  }
-
   const mappedDimensi = STANDARD_PROFIL_DIMENSI.map((std) => {
     const isSelected = Array.isArray(form.dimensiProfilLulusan)
       ? form.dimensiProfilLulusan.includes(std.key) || form.dimensiProfilLulusan.includes(std.label)
@@ -365,6 +921,11 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
   const calculatedAsesmenFormatifSikap = activeSelected.length > 0
     ? `Jurnal Observasi Dimensi Profil Lulusan (${activeDimNames}) selama kegiatan belajar berlangsung.`
     : "Jurnal Observasi Sikap dan Keaktifan Murid selama kegiatan belajar berlangsung.";
+
+  // Generate model-specific authentic syntaxes and multi-meeting plan
+  const syntaxSystem = generateModelSyntaxSystem(model, materi, mapel, activeDimNames);
+  const daftarPertemuan = countPertemuan > 1 ? syntaxSystem.buildMultiMeetingPlan(countPertemuan) : undefined;
+  const sintakInti = syntaxSystem.singleMeetingSintak;
 
   return {
     id: `custom-${Date.now()}`,
@@ -424,43 +985,7 @@ export function buildFallbackModule(form: GenerateFormValues): DeepLearningModul
     ],
 
     waktuInti: "75 Menit",
-    sintakInti: [
-      {
-        sintakNomor: 1,
-        namaSintak: "Orientasi Murid pada Masalah Kontekstual / Stimulasi Awal",
-        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Bermakna & Menggembirakan)",
-        dimensiProfil: "Penalaran Kritis & Keimanan",
-        deskripsi: `Guru menayangkan video pendek atau menyajikan studi kasus nyata seputar ${materi}.\nMurid mengamati dan mengajukan pertanyaan pemantik awal secara kritis.\nGuru merespons dan mengarahkan fokus penyelidikan murid pada tantangan utama yang harus dipecahkan bersama.`,
-      },
-      {
-        sintakNomor: 2,
-        namaSintak: "Mengorganisasikan Murid untuk Belajar Berdiferensiasi",
-        tagDeepLearning: "DEEP LEARNING - MEMAHAMI (Kolaboratif & Berkesadaran)",
-        dimensiProfil: "Kolaborasi & Kemandirian",
-        deskripsi: `Guru memfasilitasi pembentukan kelompok kerja heterogen (4-5 murid) dan membagikan LKPD Tematik.\nSetiap anggota kelompok menyepakati peran tugas (Kapten, Pengamat, Notulis, Presenter).\nGuru memberikan petunjuk pengerjaan dan menegaskan nilai saling menghargai dalam berdiskusi.`,
-      },
-      {
-        sintakNomor: 3,
-        namaSintak: "Membimbing Penyelidikan Mandiri dan Kelompok (Investigasi Terarah)",
-        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Experiential & Joyful Learning)",
-        dimensiProfil: "Penalaran Kritis & Kreativitas",
-        deskripsi: `Kelompok melakukan investigasi, mengumpulkan data/informasi dari bahan ajar, dan memecahkan tantangan studi kasus pada LKPD.\nMurid menguji coba alternatif penyelesaian masalah dan mencatat bukti-bukti temuan.\nGuru berkeliling memberikan scaffolding bagi kelompok yang membutuhkan bimbingan intensif dan memvalidasi proses berpikir murid.`,
-      },
-      {
-        sintakNomor: 4,
-        namaSintak: "Mengembangkan dan Menyajikan Hasil Karya (Kreativitas Produk)",
-        tagDeepLearning: "DEEP LEARNING - MENGAPLIKASI (Komunikasi & Kolaborasi)",
-        dimensiProfil: "Komunikasi, Kreativitas & Kolaborasi",
-        deskripsi: `Kelompok menyusun produk penyelesaian masalah (peta pikiran / infografis mini / lembar kerja kreasi).\nPerwakilan kelompok mempresentasikan hasil karyanya di hadapan teman-teman melalui panggung unjuk karya atau galeri berjalan.\nKelompok lain memberikan tanggapan, apresiasi, dan pertanyaan konstruktif.`,
-      },
-      {
-        sintakNomor: 5,
-        namaSintak: "Menganalisis dan Mengevaluasi Proses Pemecahan Masalah",
-        tagDeepLearning: "DEEP LEARNING - MEREFLEKSI & MEMAHAMI",
-        dimensiProfil: "Penalaran Kritis & Komunikasi",
-        deskripsi: `Guru bersama murid melakukan klarifikasi konsep, menyelaraskan pemahaman, dan mengoreksi miskonsepsi yang muncul.\nGuru memberikan penguatan konseptual mendalam dan mengapresiasi kerja keras serta kerja sama seluruh tim.`,
-      },
-    ],
+    sintakInti: sintakInti,
 
     waktuPenutup: "15 Menit",
     deskripsiPenutup: [

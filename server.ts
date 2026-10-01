@@ -95,6 +95,16 @@ PRINSIP WAJIB:
 4. Integrasikan prinsip DEEP LEARNING: Bermakna, Berkesadaran, Menggembirakan (Joyful Learning) serta alur MEMAHAMI, MENGAPLIKASI, MEREFLEKSI pada kegiatan inti dan penutup.
 5. Pada bagian Dimensi Profil Lulusan, sertakan tanda centang (✓) pada dimensi yang disasar.
 6. Buat konten yang sangat detail, kaya gagasan, dan riil sesuai materi yang diminta, bukan sekadar placeholder atau instruksi kosong!
+7. SINTAKS BAKU MODEL PEMBELAJARAN (ANTI-GENERIK & ANTI-MONOTON):
+Kegiatan inti pembelajaran (baik untuk 1 pertemuan maupun multi-pertemuan dari Pertemuan 1 s.d. ${targetPertemuan}) WAJIB MENGGUNAKAN SINTAKS BAKU dari model pembelajaran yang dipilih (${modelPembelajaran || "Problem Based Learning (PBL)"}), BUKAN sintak generik atau templat monoton!
+DILARANG KERAS menggunakan pola generik seperti "Sintak 1: Aktivitas Eksploratif" dan "Sintak 2: Konfirmasi Konsep"!
+Gunakan nama tahapan sintaks baku model yang sesungguhnya:
+- Jika PBL: Sintak 1 Orientasi Masalah, Sintak 2 Mengorganisasikan Belajar, Sintak 3 Membimbing Penyelidikan, Sintak 4 Mengembangkan Karya, Sintak 5 Evaluasi Pemecahan Masalah.
+- Jika PjBL: Sintak 1 Penentuan Pertanyaan Mendasar, Sintak 2 Mendesain Perencanaan Proyek, Sintak 3 Menyusun Jadwal, Sintak 4 Memonitor Perkembangan Proyek, Sintak 5 Menguji Hasil, Sintak 6 Mengevaluasi Pengalaman Belajar.
+- Jika Discovery Learning: Sintak 1 Pemberian Rangsangan (Stimulation), Sintak 2 Identifikasi Masalah (Problem Statement), Sintak 3 Pengumpulan Data, Sintak 4 Pengolahan Data, Sintak 5 Pembuktian (Verification), Sintak 6 Menarik Simpulan/Generalisasi.
+- Jika Inquiry Learning: Sintak 1 Orientasi Masalah Penyelidikan, Sintak 2 Merumuskan Masalah, Sintak 3 Merumuskan Hipotesis, Sintak 4 Mengumpulkan Data, Sintak 5 Menguji Hipotesis, Sintak 6 Kesimpulan.
+- Jika Experiential Learning: Sintak 1 Pengalaman Konkret (Concrete Experience), Sintak 2 Observasi Reflektif, Sintak 3 Konseptualisasi Abstrak, Sintak 4 Eksperimentasi Aktif.
+Bila dirancang untuk ${targetPertemuan} pertemuan, alirkan tahapan sintaks baku model tersebut secara progresif dan bermakna dari pertemuan 1 sampai pertemuan akhir!
 
 STRUKTUR DOKUMEN WAJIB:
 # PERENCANAAN PEMBELAJARAN MENDALAM (DEEP LEARNING)
@@ -145,26 +155,26 @@ STRUKTUR DOKUMEN WAJIB:
 ${targetPertemuan > 1 ? `
 *(MANDATORI: Modul ini dirancang untuk ${targetPertemuan} Pertemuan. Anda WAJIB membuat seluruh sub-seksi dari "### Pertemuan 1" sampai "### Pertemuan ${targetPertemuan}" dengan tabel kegiatan masing-masing (Pendahuluan, Inti, Penutup)!)*
 
-### Pertemuan 1: [Fokus & Judul Pertemuan 1] (Alokasi: [Waktu Pertemuan 1])
+### Pertemuan 1: [Fokus & Judul Pertemuan 1 - Misal: Orientasi Masalah & Desain Proyek/Investigasi] (Alokasi: [Waktu Pertemuan 1])
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
 | :--- | :--- | :--- |
-| **Pendahuluan**<br>*(Memahami)* | • Orientasi, Salam, Doa, Apersepsi & Pemantik Berkesadaran | ... Menit |
-| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sintak Model Pembelajaran tahap awal/eksplorasi konsep, Tag DEEP LEARNING)* | ... Menit |
-| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi berkesadaran, kesimpulan, tindak lanjut | ... Menit |
+| **Pendahuluan**<br>*(Memahami)* | • Orientasi, Salam, Doa, Apersepsi & Pemantik Berkesadaran seputar materi | ... Menit |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(WAJIB: Tuliskan nama sintaks baku model ${modelPembelajaran || "PBL"} secara eksplisit, tag DEEP LEARNING, serta aktivitas detail murid & guru).*<br><br>**Sintak 1 [Nama Sintak Baku Model]**<br>• [Deskripsi aktivitas konkret dengan murid & bahan ajar]<br><br>**Sintak 2 [Nama Sintak Baku Model]**<br>• [Deskripsi aktivitas investigasi/perencanaan kelompok] | ... Menit |
+| **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi berkesadaran, kesimpulan, tindak lanjut ke pertemuan berikutnya | ... Menit |
 
-... (lanjutkan berurutan hingga Pertemuan ${targetPertemuan}) ...
+... (lanjutkan berurutan hingga Pertemuan ${targetPertemuan} dengan mengikuti alur sintaks baku model yang progresif) ...
 
-### Pertemuan ${targetPertemuan}: [Fokus & Judul Pertemuan Akhir - Unjuk Karya / Evaluasi / Refleksi Holistik] (Alokasi: [Waktu Pertemuan ${targetPertemuan}])
+### Pertemuan ${targetPertemuan}: [Fokus & Judul Pertemuan Akhir - Unjuk Karya / Pengujian Hasil / Evaluasi & Refleksi Holistik] (Alokasi: [Waktu Pertemuan ${targetPertemuan}])
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
 | :--- | :--- | :--- |
 | **Pendahuluan**<br>*(Memahami)* | • Orientasi, Review progres modul, Pengkondisian unjuk karya / evaluasi | ... Menit |
-| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Penyelesaian karya / presentasi / gelar karya / evaluasi sumatif, Tag DEEP LEARNING)* | ... Menit |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(WAJIB: Sintaks baku tahap akhir model ${modelPembelajaran || "PBL"} - unjuk karya / gelar pameran / evaluasi pemecahan masalah / penilaian produk).*<br><br>**Sintak Akhir [Nama Sintak Baku Model]**<br>• [Deskripsi gelar karya/evaluasi proses/uji hasil]<br><br>**Sintak Evaluasi [Nama Sintak Baku Model]**<br>• [Evaluasi pengalaman belajar & refleksi solutif] | ... Menit |
 | **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi menyeluruh, rencana aksi nyata, perayaan belajar, doa penutup | ... Menit |
 ` : `
 | Kegiatan | Deskripsi Kegiatan | Alokasi Waktu |
 | :--- | :--- | :--- |
 | **Pendahuluan**<br>*(Memahami)* | • Orientasi, Salam, Doa (Keimanan dan Ketaqwaan).<br>• Cek kehadiran, kenyamanan kelas, dan kesiapan belajar (mindfulness/senam otak singkat).<br>• Apersepsi & Pertanyaan Pemantik Berkesadaran yang menstimulasi rasa ingin tahu.<br>• Penyampaian Tujuan Pembelajaran, alur aktivitas menggembirakan, dan kesepakatan belajar. | ... Menit |
-| **Inti**<br>*(Memahami, Mengaplikasi)* | *(Sertakan Sintak Model Pembelajaran yang dipilih, tag DEEP LEARNING - MEMAHAMI / MENGAPLIKASI, serta integrasi Dimensi Profil Lulusan).*<br><br>**Sintak 1: [Orientasi Murid pada Masalah / Stimulasi]**<br>• [Uraian aktivitas eksploratif dan pemantik]<br><br>**Sintak 2: [Mengorganisasi Murid untuk Belajar]**<br>• [Pembagian kelompok diferensiasi & pembagian peran tim]<br><br>**Sintak 3: [Membimbing Penyelidikan / Eksplorasi Mandiri & Kelompok]**<br>• [Aktivitas hands-on / eksperimen / penelusuran fakta]<br><br>**Sintak 4: [Mengembangkan dan Menyajikan Hasil Karya]**<br>• [Pembuatan produk/laporan kreatif & presentasi interaktif]<br><br>**Sintak 5: [Menganalisis dan Mengevaluasi Proses Pemecahan Masalah]**<br>• [Refleksi proses, konfirmasi konsep, dan apresiasi guru] | ... Menit |
+| **Inti**<br>*(Memahami, Mengaplikasi)* | *(WAJIB: Tuliskan seluruh tahapan sintaks baku resmi model ${modelPembelajaran || "Problem Based Learning (PBL)"} secara lengkap dan berurutan dari Sintak 1 hingga akhir, tag DEEP LEARNING, serta integrasi Dimensi Profil Lulusan).*<br><br>**Sintak 1: [Nama Sintak 1 Resmi Model ${modelPembelajaran || "PBL"}]**<br>• [Aktivitas konkret guru dan murid seputar materi]<br><br>**Sintak 2: [Nama Sintak 2 Resmi Model ${modelPembelajaran || "PBL"}]**<br>• [Aktivitas pengorganisasian/perencanaan kelompok]<br><br>**Sintak 3: [Nama Sintak 3 Resmi Model ${modelPembelajaran || "PBL"}]**<br>• [Aktivitas penyelidikan/eksekusi karya/pengumpulan data]<br><br>**Sintak 4: [Nama Sintak 4 Resmi Model ${modelPembelajaran || "PBL"}]**<br>• [Pengembangan karya/pengolahan data/pemantauan]<br><br>**Sintak 5 (dan seterusnya): [Nama Sintak Akhir Resmi Model ${modelPembelajaran || "PBL"}]**<br>• [Evaluasi, penyajian karya, atau pembuktian generalisasi] | ... Menit |
 | **Penutup**<br>*(Merefleksi)* | **DEEP LEARNING – MEREFLEKSI**<br>• Refleksi berkesadaran murid (pertanyaan pemantik reflektif 3-2-1).<br>• Menyimpulkan pembelajaran bersama murid secara bermakna.<br>• Asesmen Sumatif singkat / kuis interaktif 5 menit.<br>• Tindak lanjut, motivasi inspiratif, dan Doa penutup. | ... Menit |
 `}
 
